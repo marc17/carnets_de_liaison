@@ -91,7 +91,7 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 }
 
 
-function envoi_SMS($prestataire,$login,$password,$tab_to,$from,$sms) {
+function envoi_SMS($prestataire,$login,$password,$tab_to,$sms) {
 	// $tab_to : tableau des numéros de téléphone auxquels envoyer le sms
 	// retourne "OK" si envoi réussi, un message d'erreur sinon
 	switch ($prestataire) {
@@ -100,13 +100,13 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$from,$sms) {
 			$script="/httpapi.php";
 			$parametres['cmd']='sendsms';            
 			$parametres['txt']=$sms; // message a envoyer
-			$parametres['user']=getSettingValue("carnets_de_liaison_identifiant_sms"); // identifiant Pluriware
+			$parametres['user']=getSettingValue("carnets_de_liaison_login_sms"); // identifiant Pluriware
 			$parametres['pass']=getSettingValue("carnets_de_liaison_password_sms"); // mot de passe Pluriware
 			
 			foreach($tab_to as $key => $to) $tab_to[$key]=filtrage_numero($to,true);
 			$to=$tab_to[0]; // ! un seul numéro
 			$parametres['to']=$to; // numéro de téléphone auxquel on envoie le message (! un seul numéro)
-			$parametres['from']=$from; // expéditeur du message (facultatif)
+			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // expéditeur du message (facultatif)
 
 			$reponse=envoi_requete_http($url,$script,$parametres);
 			if (substr($reponse,0,3)=='ERR' || substr($reponse, 0, 6)=='Erreur') {
@@ -121,7 +121,7 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$from,$sms) {
 			$script="/http.php";
 			$hote="123-SMS.net";
 			$script="/http.php";
-			$parametres['email']=getSettingValue("carnets_de_liaison_identifiant_sms"); // identifiant 123-SMS.net
+			$parametres['email']=getSettingValue("carnets_de_liaison_login_sms"); // identifiant 123-SMS.net
 			$parametres['pass']=getSettingValue("carnets_de_liaison_password_sms"); // mot de passe 123-SMS.net
 			$parametres['message']=$sms; // message que l'on désire envoyer
 			
@@ -142,7 +142,7 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$from,$sms) {
 			$script="/client/api/http.php";
 			$hote="tm4b.com";
 			$script="/client/api/http.php";
-			$parametres['username']=getSettingValue("carnets_de_liaison_identifiant_sms"); // identifiant  TM4B
+			$parametres['username']=getSettingValue("carnets_de_liaison_login_sms"); // identifiant  TM4B
 			$parametres['password']=getSettingValue("carnets_de_liaison_password_sms"); // mot de passe  TM4B
 			$parametres['type']='broadcast'; // envoi de sms
 			$parametres['msg']=$sms; // message a envoyer
@@ -151,7 +151,7 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$from,$sms) {
 			$to=implode("%7C",$tab_to);
 			$parametres['to']=$to; // numéros de téléphones auxquels on envoie le message séparés par des pipe %7C
 
-			$parametres['from']=$from; // expéditeur du message (first class uniquement)
+			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // expéditeur du message (first class uniquement)
 			$parametres['route']='business'; // type de route (pour la france, business class uniquement)
 			$parametres['version']='2.1';
 			// $parametres['sim']='yes'; // on active le mode simulation, pour tester notre script

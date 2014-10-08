@@ -363,14 +363,14 @@ if(!isset($gepiSettings['carnets_de_liaison_notification_sms_aux_responsables'])
 	if (!saveSetting('carnets_de_liaison_prestataire_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_prestataire_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_prestataire_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_identifiant_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_identifiant_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
-		else $message_maj_tables.="L'entrée 'carnets_de_liaison_identifiant_sms' a été ajoutée à la table `setting`.<br />";
+	if (!saveSetting('carnets_de_liaison_login_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_login_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		else $message_maj_tables.="L'entrée 'carnets_de_liaison_login_sms' a été ajoutée à la table `setting`.<br />";
 
 	if (!saveSetting('carnets_de_liaison_password_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_password_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_password_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_numero_sms_notification','06')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_numero_sms_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
-		else $message_maj_tables.="L'entrée 'carnets_de_liaison_numero_sms_notification' a été ajoutée à la table `setting`.<br />";
+	if (!saveSetting('carnets_de_liaison_identite_sms','06')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_identite_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		else $message_maj_tables.="L'entrée 'carnets_de_liaison_identite_sms' a été ajoutée à la table `setting`.<br />";
 
 	if (!saveSetting('carnets_de_liaison_max_sms_notification',60)) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_sms_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_max_sms_notification' a été ajoutée à la table `setting`.<br />";
@@ -401,13 +401,13 @@ $carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_d
 $carnets_de_liaison_prestataire_sms=getSettingValue("carnets_de_liaison_prestataire_sms");
 
 // login SMS
-$carnets_de_liaison_identifiant_sms=getSettingValue("carnets_de_liaison_identifiant_sms");
+$carnets_de_liaison_login_sms=getSettingValue("carnets_de_liaison_login_sms");
 
 // password SMS
 $carnets_de_liaison_password_sms=getSettingValue("carnets_de_liaison_password_sms");
 
-// numéro émetteur SMS  Carnets de liaison
-$carnets_de_liaison_numero_sms_notification=getSettingValue("carnets_de_liaison_numero_sms_notification");
+// identité émetteur SMS  Carnets de liaison
+$carnets_de_liaison_identite_sms=getSettingValue("carnets_de_liaison_identite_sms");
 
 // max de sms de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_sms_notification=intval(getSettingValue("carnets_de_liaison_max_sms_notification"));
@@ -487,11 +487,11 @@ if (isset($_POST['valider_notification_sms']))
 	if (!saveSetting('carnets_de_liaison_notification_sms_aux_responsables',$carnets_de_liaison_notification_sms_aux_responsables)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
-// modification de la valeur  numéro émetteur SMS  Carnets de liaison
+// modification de la valeur  identité émetteur SMS  Carnets de liaison
 if (isset($_POST['valider_numero_sms_notification']))
 	{
-	$carnets_de_liaison_numero_sms_notification=$_POST['envoi_numero_sms_notification'];
-	if (!saveSetting('carnets_de_liaison_numero_sms_notification',$carnets_de_liaison_numero_sms_notification)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
+	$carnets_de_liaison_identite_sms=$_POST['envoi_numero_sms_notification'];
+	if (!saveSetting('carnets_de_liaison_identite_sms',$carnets_de_liaison_identite_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
 // modification de la valeur de "carnets_de_liaison_prestataire_sms"
@@ -501,11 +501,11 @@ if (isset($_POST['valider_prestataire_sms']))
 	if (!saveSetting('carnets_de_liaison_prestataire_sms',$carnets_de_liaison_prestataire_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
-// modification de la valeur de "carnets_de_liaison_identifiant_sms"
+// modification de la valeur de "carnets_de_liaison_login_sms"
 if (isset($_POST['valider_identifiant_sms']))
 	{
-	$carnets_de_liaison_identifiant_sms=$_POST['envoi_identifiant_sms'];
-	if (!saveSetting('carnets_de_liaison_identifiant_sms',$carnets_de_liaison_identifiant_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
+	$carnets_de_liaison_login_sms=$_POST['envoi_identifiant_sms'];
+	if (!saveSetting('carnets_de_liaison_login_sms',$carnets_de_liaison_login_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
 // modification de la valeur de "carnets_de_liaison_password_sms"
@@ -836,10 +836,10 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	<br />
 	<form action="admin.php#numero_sms" name="numero_sms" method="post"><a name="numero_sms"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Numéro émetteur SMS&nbsp;:&nbsp;
-	<input type="text" style="width: 300px" name="envoi_numero_sms_notification" value="<?php echo $carnets_de_liaison_numero_sms_notification; ?>">
+	Identié de l'émetteur SMS&nbsp;:&nbsp;
+	<input type="text" style="width: 300px" name="envoi_numero_sms_notification" value="<?php echo $carnets_de_liaison_identite_sms; ?>">
 	&nbsp;<button type="submit" value="ok" name="valider_numero_sms_notification">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Numéro de téléphone émettant les SMS.</p>
+	<p style="margin-left: 20px; font-style:italic;">Nom  de l'établissement, ou numéro de téléphone, ou autre (éviter les lettres accentuées et caractères spéciaux).</p>
 	</form>
 	<br />
 	<form action="admin.php#prestataire_sms" name="prestataire_sms" method="post"><a name="prestataire_sms"></a>
@@ -864,10 +864,10 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	<br />
 	<form action="admin.php#identifiant_sms" name="identifiant_sms" method="post"><a name="identifiant_sms"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Identfiant SMS&nbsp;:&nbsp;
-	<input type="text" style="width: 300px" name="envoi_identifiant_sms" value="<?php echo $carnets_de_liaison_identifiant_sms; ?>">
+	Login SMS&nbsp;:&nbsp;
+	<input type="text" style="width: 300px" name="envoi_identifiant_sms" value="<?php echo $carnets_de_liaison_login_sms; ?>">
 	&nbsp;<button type="submit" value="ok" name="valider_identifiant_sms">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Identifiant pour se connecter au prestataire SMS.</p>
+	<p style="margin-left: 20px; font-style:italic;">Login pour se connecter au prestataire SMS.</p>
 	</form>
 	<br />
 	<form action="admin.php#password_sms" name="password_sms" method="post"><a name="password_sms"></a>
@@ -883,7 +883,7 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	Nombre maximun de SMS de notifications pouvant être envoyés &nbsp;:&nbsp;
 	<input name="max_sms_notification" value="<?php echo $carnets_de_liaison_max_sms_notification; ?>" type="text" size="4">
 	&nbsp;<button type="submit" value="ok" name="valider_max_sms_notification">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notifications à envoyer est supérieur à ce nombre maximum l'envoi est alors annulé.</p>
+	<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notification à envoyer est supérieur à ce nombre l'envoi est alors annulé.</p>
 	</form>
 <?php
 	}

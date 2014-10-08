@@ -9,15 +9,6 @@ $carnets_de_liaison_url_gepi=getSettingValue("carnets_de_liaison_url_gepi");
 // nom de domaine fictif pour l'envoi de courriel anonyme
 $email_notification=getSettingValue("carnets_de_liaison_email_notification");
 
-// les rédacteurs peuvent-ils envoyer un sms de notification ?
-$carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_de_liaison_notification_sms_aux_responsables");
-
-// prestataire SMS
-$carnets_de_liaison_prestataire_sms=getSettingValue("carnets_de_liaison_prestataire_sms");
-
-// numéro émetteur SMS  Carnets de liaison
-$carnets_de_liaison_sms_notification=getSettingValue("carnets_de_liaison_sms_notification");
-
 // max de sms de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_sms_notification=intval(getSettingValue("carnets_de_liaison_max_sms_notification"));
 

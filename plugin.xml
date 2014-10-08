@@ -126,7 +126,7 @@
 			</requete>
 			<requete>
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_identifiant_sms', '')
+			VALUES ('carnets_de_liaison_login_sms', '')
 			</requete>
 			<requete>
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
@@ -134,7 +134,7 @@
 			</requete>
 			<requete>
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_numero_sms_notification', '06')
+			VALUES ('carnets_de_liaison_identite_sms', '06')
 			</requete>
 			<requete>
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
@@ -197,7 +197,7 @@
 			</requete>
 			<requete>
 			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_identifiant_sms'
+			WHERE `NAME`='carnets_de_liaison_login_sms'
 			</requete>
 			<requete>
 			DELETE FROM `setting`
@@ -205,7 +205,7 @@
 			</requete>
 			<requete>
 			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_numero_sms_notification'
+			WHERE `NAME`='carnets_de_liaison_identite_sms'
 			</requete>
 			<requete>
 			DELETE FROM `setting`

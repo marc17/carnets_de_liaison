@@ -76,6 +76,9 @@ $carnets_de_liaison_notification_mail_aux_responsables=getSettingValue("carnets_
 // les rédacteurs peuvent-ils joindre un fichier aux mots ?
 $carnets_de_liaison_documents=getSettingValue("carnets_de_liaison_documents");
 
+// les rédacteurs peuvent-ils envoyer un sms de notification ?
+$carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_de_liaison_notification_sms_aux_responsables");
+
 // a priori pas d'erreur
 $message_d_erreur="";
 
