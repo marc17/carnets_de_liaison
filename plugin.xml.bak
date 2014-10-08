@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<gepinstall type="plugin">
+	<nom>carnets_de_liaison</nom>
+	<creationDate>10 2011</creationDate>
+	<auteur>M. Leygnac</auteur>
+	<licence>GNU/GPL</licence>
+	<auteurCourriel> </auteurCourriel>
+	<auteurSite> </auteurSite>
+	<version>1.8.0</version>
+	<versiongepi>1.6.5</versiongepi>
+	<description>Carnets de liaison</description>
+	<installation>
+		<requetes>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_eleve` (
+			`ele_id` VARCHAR(10) NOT NULL ,
+			`ids_mots` VARCHAR(512) NOT NULL DEFAULT '-1',
+			UNIQUE KEY `ele_id` (`ele_id`)
+			) 
+			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_classe` (
+			`id_classe` SMALLINT(6) NOT NULL ,
+			`ids_mots` VARCHAR(512) NOT NULL DEFAULT '-1',
+			UNIQUE KEY `id_classe` (`id_classe`)
+			) 
+			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_aid` (
+			  `id_aid` smallint(6) NOT NULL,
+			  `ids_mots` varchar(512) NOT NULL DEFAULT '-1',
+			  UNIQUE KEY `id_aid` (`id_aid`)
+			)			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_groupe` (
+			  `id_groupe` smallint(6) NOT NULL,
+			  `ids_mots` varchar(512) NOT NULL DEFAULT '-1',
+			  UNIQUE KEY `id_groupe` (`id_groupe`)
+			)
+			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_mots` (
+			`id_mot` INT NOT NULL AUTO_INCREMENT ,
+			`login_redacteur` VARCHAR( 50 ) NOT NULL DEFAULT '',
+			`mail` varchar(128) NOT NULL DEFAULT '',
+			`type` VARCHAR(6) NOT NULL DEFAULT '',
+			`reponse_destinataire` varchar(3) NOT NULL DEFAULT 'non',
+			`ids_destinataires` VARCHAR(2048) NOT NULL DEFAULT '-1',
+			`ensemble_destinataire` varchar(256) NOT NULL DEFAULT '',
+			`visible` BOOL NOT NULL DEFAULT '1',
+			`date` DATE NOT NULL DEFAULT '0000-00-00',
+			`intitule` VARCHAR( 128 ) NOT NULL DEFAULT '',
+			`texte` TEXT NOT NULL DEFAULT '',
+			`document` varchar(512) NOT NULL DEFAULT '',
+			PRIMARY KEY (`id_mot`),
+			INDEX (`login_redacteur`),
+			INDEX (`type`),
+			UNIQUE (`id_mot`)
+			)
+			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_reponses` (
+			`id_mot` INT(11) NOT NULL DEFAULT '0',
+			`login_redacteur` VARCHAR(50) NOT NULL DEFAULT '',
+			`date` DATE NOT NULL DEFAULT '0000-00-00',
+			`texte` TEXT NOT NULL DEFAULT '',
+			INDEX (`id_mot`)
+			)
+			</requete>
+			<requete>
+			CREATE TABLE `carnets_de_liaison_droits` (
+			`id_carnets_de_liaison_droits` int(11) NOT NULL AUTO_INCREMENT,
+			`login` varchar(50) NOT NULL,
+			`nom` varchar(100) NOT NULL,
+			PRIMARY KEY (`id_carnets_de_liaison_droits`)
+			)
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_mail', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_documents', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_saisie_responsable', 'oui')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_reponses_responsables', 'oui')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_affiche_trombines_eleves', 'oui')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_affiche_trombines_profs', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_notification_mail_aux_responsables', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('envoil_mail_notification', 'nobody@nowhere.com')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_max_mails_notification', '60')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_consultation_eleve', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_notification_sms_aux_responsables', 'non')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_sms_prestataire', '')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_sms_notification', '06')
+			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_max_sms_notification', '60')
+			</requete>
+		</requetes>
+	</installation>
+	<desinstallation>
+		<requetes>
+			<requete>
+			DROP TABLE `carnets_de_liaison_eleve`,`carnets_de_liaison_classe`,`carnets_de_liaison_aid`,`carnets_de_liaison_groupe`,`carnets_de_liaison_mots`,`carnets_de_liaison_reponses`,`carnets_de_liaison_droits`
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_mail'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_documents'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_saisie_responsable'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_reponses_responsables'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_affiche_trombines_eleves'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_affiche_trombines_profs'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_notification_mail_aux_responsables'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='envoil_mail_notification'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_max_mails_notification'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_consultation_eleve'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_notification_sms_aux_responsables'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_sms_prestataire'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_sms_notification'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_max_sms_notification'
+			</requete>
+		</requetes>
+	</desinstallation>
+	<administration>
+		<fichier>
+			<nomfichier autorisation="R">index.php</nomfichier>
+			<nomfichier autorisation="E">index_eleve.php</nomfichier>
+			<nomfichier autorisation="A">test_incoherences.php</nomfichier>
+			<nomfichier autorisation="A">admin.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">saisie.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">saisie_par_classe.php</nomfichier>
+			<nomfichier autorisation="P">saisie_par_aid.php</nomfichier>
+			<nomfichier autorisation="P">saisie_par_groupe.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">saisie_par_eleve.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">consultation.php</nomfichier>
+			<nomfichier autorisation="A-C">consultation_cpe.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">consultation_mots_recus.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-autre">consultation_reponses.php</nomfichier>
+			<nomfichier autorisation="A-P-C-S-R-autre">telecharger_document.php</nomfichier>
+		</fichier>
+		<menu>
+			<item autorisation="R" titre="Consultation" description="Consultation des carnets de liaison des élèves dont vous êtes responsable.">index.php</item>
+			<item autorisation="E" titre="Consultation" description="Consultation du carnet de liaison.">index_eleve.php</item>
+			<item autorisation="A" titre="Administration" description="Administration du plugin.">admin.php</item>
+			<item autorisation="A-P-C-S-autre" titre="Saisie" description="Saisie de mots dans un carnet de liaison.">saisie.php</item>
+			<item autorisation="A-P-C-S" titre="Consultation" description="Consultation de carnets de liaison.">consultation.php</item>
+		</menu>
+	</administration>
+</gepinstall>
+ 

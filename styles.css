@@ -1,0 +1,107 @@
+hr {
+height: 1px;
+color: #0000FF;
+background-color: #0000FF;
+margin-top: 5px;
+margin-right: 0px;
+margin-bottom: 5px;
+margin-left: 0px;
+}
+
+button {
+	color: #330033;
+	font: normal 11pt Helvetica, Verdana, sans-serif;
+	border: 1px solid black;
+	padding-right: 2px;
+	padding-left: 2px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	box-shadow: 3px 3px 13px #666;
+	-moz-box-shadow: 3px 3px 13px #666;
+	-webkit-box-shadow: 3px 3px 13px #666;
+}
+
+
+button:hover, button:active, button:focus {
+	border-color: red;
+	background: #FFFFF1;
+}
+
+.saisie {
+border-style: solid;
+border-width: 1px;
+padding: 5px;
+background-color: #cccccc;
+border-radius: 15px;
+-moz-border-radius: 15px;
+-webkit-border-radius: 15px;
+box-shadow: 5px 5px 13px #666;
+-moz-box-shadow: 5px 5px 13px #666;
+-webkitwebkit-box-shadow: 5px 5px 13px #666;
+}
+
+.intitule {
+font-weight: bold;
+width:400px;border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+box-shadow: 3px 3px 13px #666;
+-moz-box-shadow: 3px 3px 13px #666;
+-webkit-box-shadow: 3px 3px 13px #666;
+}
+
+.texte {
+width:500px;
+margin-left:0px;
+margin-top:5px;
+margin-bottom: 5px;
+padding:5px;
+border:1px solid black;
+background-color:#ffffff;
+font-family:'Times New Roman',Times,serif;
+font-size: 12pt;
+border-radius: 15px;
+-moz-border-radius: 15px;
+-webkit-border-radius: 15px;
+box-shadow: 5px 5px 13px #666;
+-moz-box-shadow: 5px 5px 13px #666;
+-webkitwebkit-box-shadow: 5px 5px 13px #666;
+}
+
+.calendrier { border-style: solid;
+border-color: rgb(153, 153, 153);
+text-align: center;
+vertical-align: middle;
+width: 150px;
+}
+	
+.calendrier_cell { border-style: solid;
+border-color: rgb(153, 153, 153);
+text-align: center;
+vertical-align: middle;
+width: 14%;
+background-color: rgb(192, 192, 192);
+}
+
+.calendrier_cell_titre { border-style: solid;
+border-color: rgb(204, 102, 0);
+text-align: center;
+vertical-align: middle;
+background-color: rgb(204, 153, 51);
+color: rgb(0, 0, 153);
+}
+
+.calendrier_cell_dim { border-style: solid;
+border-color: rgb(102, 102, 102);
+text-align: center;
+vertical-align: middle;
+width: 14%;
+background-color: rgb(153, 153, 153);
+}
+
+.calendrier td { border-style: none;
+border-width: 1px;
+font-family: Arial,Helvetica,sans-serif;
+font-size: 12px;
+}
