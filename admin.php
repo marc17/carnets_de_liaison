@@ -449,8 +449,8 @@ if (isset($_POST['valider_mail']))
 // modification de la valeur de "carnets_de_liaison_email_notification"
 if (isset($_POST['valider_email_notification']))
 	{
-	$envoil_email_notification=$_POST['envoil_email_notification'];
-	if (!saveSetting('carnets_de_liaison_email_notification',$envoil_email_notification)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
+	$envoi_email_notification=$_POST['envoi_email_notification'];
+	if (!saveSetting('carnets_de_liaison_email_notification',$envoi_email_notification)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
 // modification de la valeur de "carnets_de_liaison_url_gepi"
@@ -831,7 +831,7 @@ Autoriser l'envoi de SMS notifiant la rédaction d'un mot&nbsp;:&nbsp;
 <?php
 if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="oui")
 	{
-	include("envoi_SMS.php");
+	include("envoi_SMS.inc.php");
 ?>
 	<br />
 	<form action="admin.php#numero_sms" name="numero_sms" method="post"><a name="numero_sms"></a>

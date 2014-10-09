@@ -483,8 +483,8 @@ if ($etape==2)
 			{
 ?>
 			<br />Courriel de notification aux responsables : 
-				OUI <input <?php if (isset($_POST['envoil_mail_notification']) && ($_POST['envoil_mail_notification']=="oui")) echo "checked=\"checked\"" ?>name="envoil_mail_notification" value="oui" type="radio">
-				NON <input <?php if ((!isset($_POST['envoil_mail_notification'])) || (isset($_POST['envoil_mail_notification']) && ($_POST['envoil_mail_notification']=="non"))) echo "checked=\"checked\"" ?> name="envoil_mail_notification" value="non" type="radio">
+				OUI <input <?php if (isset($_POST['envoi_mail_notification']) && ($_POST['envoi_mail_notification']=="oui")) echo "checked=\"checked\"" ?>name="envoi_mail_notification" value="oui" type="radio">
+				NON <input <?php if ((!isset($_POST['envoi_mail_notification'])) || (isset($_POST['envoi_mail_notification']) && ($_POST['envoi_mail_notification']=="non"))) echo "checked=\"checked\"" ?> name="envoi_mail_notification" value="non" type="radio">
 			<br />
 <?php
 			}
@@ -493,7 +493,25 @@ if ($etape==2)
 		{
 ?>
 		<input type="hidden" name="mail" value="<?php if (isset($_POST['mail'])) echo stripslashes($_POST['mail']); else echo $email; ?>">
-		<input type="hidden" name="envoil_mail_notification" value="<?php if (isset($_POST['envoil_mail_notification'])) echo $_POST['envoil_mail_notification']; else echo "non" ?>">
+		<input type="hidden" name="envoi_mail_notification" value="<?php if (isset($_POST['envoi_mail_notification'])) echo $_POST['envoi_mail_notification']; else echo "non" ?>">
+<?php
+		}
+?>
+
+<?php
+	if ($carnets_de_liaison_notification_sms_aux_responsables=="oui")
+		{
+?>
+		<br />SMS de notification aux responsables : 
+			OUI <input <?php if (isset($_POST['envoi_sms_notification']) && ($_POST['envoi_sms_notification']=="oui")) echo "checked=\"checked\"" ?>name="envoi_sms_notification" value="oui" type="radio">
+			NON <input <?php if ((!isset($_POST['envoi_sms_notification'])) || (isset($_POST['envoi_sms_notification']) && ($_POST['envoi_sms_notification']=="non"))) echo "checked=\"checked\"" ?> name="envoi_sms_notification" value="non" type="radio">
+		<br />
+<?php
+		}
+	else
+		{
+?>
+		<input type="hidden" name="envoi_sms_notification" value="<?php if (isset($_POST['envoi_sms_notification'])) echo $_POST['envoi_sms_notification']; else echo "non" ?>">
 <?php
 		}
 ?>

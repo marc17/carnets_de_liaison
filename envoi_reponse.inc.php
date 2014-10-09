@@ -4,14 +4,14 @@
 $carnets_de_liaison_url_gepi=getSettingValue("carnets_de_liaison_url_gepi");
 
 // nom de domaine pour l'envoi de mail anonyme
-$envoi_courriel_mail_notification=getSettingValue("envoi_courriel_mail_notification");
+$carnets_de_liaison_email_notification=getSettingValue("carnets_de_liaison_email_notification");
 
 if (isset($_POST['envoyer_reponse']) && ($_POST['texte']!=""))
 	{
 	// ajout de la réponse
 	$reponse="Réponse de ".$civilite_utilisateur." ".$_SESSION['prenom']." ".$_SESSION['nom']." (le ".date_du_jour().") : \n".$_POST['texte']."\n";
 	$r_sql="INSERT INTO `carnets_de_liaison_reponses` VALUES('".$_POST['id_mot']."','".$_SESSION['login']."',CURRENT_DATE,'".$reponse."')";
-	if (!mysqli_query($mysqli, $r_sql)) $message_d_erreur.="Impossible d'enregistrer la réponse : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
+	if (!mysqli_query($mysqli, $r_sql)) $message_d_erreur.="Impossible d'enregistrer la réponse : ".mysqli_error($mysqli);
 	// on récupère des données du mot
 	$r_sql="SELECT `login_redacteur`,`mail`,`intitule`,`date` FROM `carnets_de_liaison_mots` WHERE `id_mot`='".$_POST['id_mot']."' LIMIT 1";
 	$R_mot=mysqli_query($mysqli, $r_sql);
@@ -22,7 +22,7 @@ if (isset($_POST['envoyer_reponse']) && ($_POST['texte']!=""))
 	if ($carnets_de_liaison_mail=="oui" && $mail!="")
 		{
 		// on masque éventuellement l'adresse expéditeur
-		if ($_SESSION['statut']!="responsable" && $show_email_utilisateur=="no") $mail_utilisateur=$envoi_courriel_mail_notification;
+		if ($_SESSION['statut']!="responsable" && $show_email_utilisateur=="no") $mail_utilisateur=$carnets_de_liaison_email_notification;
 		$to=$mail;
 		$subject="[GEPI - carnets de liaison] réponse au mot : ".stripslashes($le_mot['intitule']);
 		$subject = "=?UTF-8?B?".base64_encode($subject)."?=";

@@ -7,7 +7,7 @@ $carnets_de_liaison_max_mails_notification=(getSettingValue("carnets_de_liaison_
 $carnets_de_liaison_url_gepi=getSettingValue("carnets_de_liaison_url_gepi");
 
 // nom de domaine fictif pour l'envoi de courriel anonyme
-$email_notification=getSettingValue("carnets_de_liaison_email_notification");
+$carnets_de_liaison_email_notification=getSettingValue("carnets_de_liaison_email_notification");
 
 // max de sms de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_sms_notification=intval(getSettingValue("carnets_de_liaison_max_sms_notification"));
@@ -60,12 +60,12 @@ function message_notification($login,$texte,$id_eleve)
 		}
 	}
 
-function envoil_mail_notification($to,$subject,$bcc,$texte,$redacteur_email)
+function envoi_mail_notification($to,$subject,$bcc,$texte,$redacteur_email)
 	{
-	global $email_notification,$message_d_erreur_mail;
+	global $carnets_de_liaison_email_notification,$message_d_erreur_mail;
 	$bcc.=$_SESSION['prenom']." ".$_SESSION['nom']."<".$redacteur_email.">";
 	$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
-	$headers="From: [GEPI- carnets de liaison]  <".$email_notification.">".PHP_EOL;
+	$headers="From: [GEPI- carnets de liaison]  <".$carnets_de_liaison_email_notification.">".PHP_EOL;
 	$headers.="Content-type: text/plain; charset=utf-8".PHP_EOL;
 	$headers.="MIME-Version: 1.0".PHP_EOL;
 	$headers.="Bcc: ".$bcc."".PHP_EOL;
@@ -77,9 +77,9 @@ function envoil_mail_notification($to,$subject,$bcc,$texte,$redacteur_email)
 	return $message_d_erreur_mail;
 	}
 
-function envoi_notification($ids,$type,$envoil_mail_notification)
+function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notification)
 	{
-	global $mysqli,$gepiPath,$carnets_de_liaison_mail,$envoil_mail_notification,$carnets_de_liaison_url_gepi,$carnets_de_liaison_max_mails_notification;
+	global $mysqli,$gepiPath,$carnets_de_liaison_mail,$carnets_de_liaison_email_notification,$carnets_de_liaison_url_gepi,$carnets_de_liaison_max_mails_notification;
 	$r_sql="SELECT `civilite`,`prenom`,`nom`,`email` FROM `utilisateurs` WHERE `login`='".$_SESSION['login']."' LIMIT 1";
 
 	//$t_bilan_envoi_notification tableau de tableaux associatifs
@@ -95,9 +95,9 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 	// si le rédacteur n'a pas de mail dans GEPI on utilise le mail spécifié dans le mot
 	if ($redacteur['email']=="" && isset($_POST['mail'])) $redacteur['email']=$_POST['mail'];
 	// si aucun mail n'est défini on envoie pas de notification
-	if ($redacteur['email']=="" && $envoil_mail_notification=="oui") 
+	if ($redacteur['email']=="" && $envoi_mail_notification=="oui") 
 		{
-		$envoil_mail_notification="non";
+		$envoi_mail_notification="non";
 		$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications ne peuvent être envoyées par courriel car vous n'avez pas d'adresse pour recevoir le message en BCC.");
 		}
 
@@ -116,7 +116,7 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 				//on envoie pas plus de $carnets_de_liaison_max_mails_notification couuriels de notification (sinon spam)
 				if (mysqli_num_rows($R_responsables)>$carnets_de_liaison_max_mails_notification) 
 					{
-					$envoil_mail_notification="non";
+					$envoi_mail_notification="non";
 					$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
 					}
 				while ($un_responsable=mysqli_fetch_assoc($R_responsables))
@@ -127,11 +127,12 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 					message_notification($un_responsable['login'],$texte,$un_responsable['id_eleve']);
 					$texte.="\n\n".$carnets_de_liaison_url_gepi;
 					// on envoie éventuellement un mail de notification
-					if ($envoil_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
+					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
 						{
-						$retour=envoil_mail_notification($un_responsable['email'],$subject,"",$texte,$redacteur['email']);
+						$retour=envoi_mail_notification($un_responsable['email'],$subject,"",$texte,$redacteur['email']);
 						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
 						}
+					if ($envoi_sms_notification=="oui") $t_bilan_envoi_notification[]=array('type'=>"sms",'erreur'=>$un_responsable['nom_eleve']);
 					}
 				}
 			else  $t_bilan_envoi_notification[]=array('type'=>"erreur_sql",'erreur'=>$mysql_error());
@@ -202,7 +203,7 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 					{
 					if (mysqli_num_rows($R_responsbles)>$carnets_de_liaison_max_mails_notification) 
 						{
-						$envoil_mail_notification="non";
+						$envoi_mail_notification="non";
 						$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
 						}
 					while ($un_responsble=mysqli_fetch_assoc($R_responsbles)) 
@@ -214,9 +215,9 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 						}
 					$texte.="\n\n".$carnets_de_liaison_url_gepi;
 					// on envoie éventuellement un mail de notification
-					if ($envoil_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
+					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
 						{
-						$retour=envoil_mail_notification($un_responsble['email'],$subject,"",$texte."\n",$redacteur['email']);
+						$retour=envoi_mail_notification($un_responsble['email'],$subject,"",$texte."\n",$redacteur['email']);
 						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
 						}
 					}
@@ -229,14 +230,17 @@ function envoi_notification($ids,$type,$envoil_mail_notification)
 		
 // envoi de notification et bilan
 
-if (isset($_POST['envoil_mail_notification'])) $envoil_mail_notification=$_POST['envoil_mail_notification'];
-else $envoil_mail_notification="non";
+if (isset($_POST['envoi_mail_notification'])) $envoi_mail_notification=$_POST['envoi_mail_notification'];
+else $envoi_mail_notification="non";
+
+if (isset($_POST['envoi_sms_notification'])) $envoi_sms_notification=$_POST['envoi_sms_notification'];
+else $envoi_sms_notification="non";
 
 // variable globale pour capter les messages d'erreur d'envoi de mails
 $message_d_erreur_mail="";
 
 // on envoie les notifications
-$t_bilan_envoi_notification=envoi_notification($liste_destinataires,$type_notification,$envoil_mail_notification);
+$t_bilan_envoi_notification=envoi_notification($liste_destinataires,$type_notification,$envoi_mail_notification,$envoi_sms_notification);
 
 // message éventuel d'erreurs
 $message_bilan_notification="";
@@ -273,7 +277,7 @@ if (count($t_bilan_envoi_notification)>0)
 		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL\n(".$deniere_erreur_sql.")";
 	}
 if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-if ($envoil_mail_notification=="oui" && $nb_erreurs_mail==0) $message_bilan_notification.="Les notifications ont été envoyées par courriel.";
+if ($envoi_mail_notification=="oui" && $nb_erreurs_mail==0) $message_bilan_notification.="Les notifications ont été envoyées par courriel.";
 
 // on retourne sur saisie.php
 $url="Location: saisie.php?";
