@@ -1,5 +1,8 @@
 <?php
 
+// fonctions d'envoi SMS
+include("envoi_SMS.inc.php");
+
 // Max de mails de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_mails_notification=(getSettingValue("carnets_de_liaison_max_mails_notification")==NULL)?0:intval(getSettingValue("carnets_de_liaison_max_mails_notification"));
 
@@ -109,7 +112,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 		{
 		case "eleve" :
 			//$r_sql="SELECT DISTINCT CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email` FROM `eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND (FIND_IN_SET(`eleves`.`ele_id`,'".$ids."') AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`) ";
-			$r_sql="SELECT DISTINCT `eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve`,`utilisateurs`.`login`,`utilisateurs`.`email` FROM `eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND (FIND_IN_SET(`eleves`.`ele_id`,'".$ids."') AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`) ";
+			$r_sql="SELECT DISTINCT `eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve`,`utilisateurs`.`login`,`utilisateurs`.`email`,`resp_pers`.`tel_port` FROM `eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND (FIND_IN_SET(`eleves`.`ele_id`,'".$ids."') AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`) ";
 			$R_responsables=mysqli_query($mysqli, $r_sql);
 			if ($R_responsables)
 				{
@@ -132,10 +135,15 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						$retour=envoi_mail_notification($un_responsable['email'],$subject,"",$texte,$redacteur['email']);
 						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
 						}
-					if ($envoi_sms_notification=="oui") $t_bilan_envoi_notification[]=array('type'=>"sms",'erreur'=>$un_responsable['nom_eleve']);
+					
+					if ($envoi_sms_notification=='oui' && $un_responsable['tel_port']!='') 
+						{
+						$retour_envoi_SMS=envoi_SMS(array($un_responsable['tel_port']),"Nouveau mot rédigé par ".$redacteur['civilite']." ".$redacteur['prenom']." ".$redacteur['nom']."dans le carnet de liaison de ".$un_responsable['nom_eleve']);
+						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"sms",'erreur'=>$un_responsable['login'].' '.$retour_envoi_SMS);
+						}
 					}
 				}
-			else  $t_bilan_envoi_notification[]=array('type'=>"erreur_sql",'erreur'=>$mysql_error());
+			else  $t_bilan_envoi_notification[]=array('type'=>"erreur_sql",'erreur'=>mysqli_error($mysqli));
 			break;
 		default :
 			switch ($type)
@@ -151,7 +159,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						}
 					else $ensemble="";
 					//$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
-					$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
+					$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`resp_pers`.`tel_port`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs`, WHERE `utilisateurs`.`email`<>'' AND FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
 					break;
 				case "groupe" :
 					$r_sql="SELECT GROUP_CONCAT(`classes`.`nom_complet`) AS `ensemble` FROM `classes`,`j_groupes_classes`,`groupes` WHERE `groupes`.`id`='".$ids."' AND `j_groupes_classes`.`id_groupe`=`groupes`.`id` AND `j_groupes_classes`.`id_classe`=`classes`.`id` GROUP BY `groupes`.`id`";
@@ -170,7 +178,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						$ensemble=$t_ensemble['description']." ".$ensemble;
 						}
 					//$r_sql="SELECT DISTINCT DISTINCT '".$ensemble."' AS `ensemble`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email` FROM `groupes`,`j_eleves_groupes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `groupes`.`id`='".$ids."' AND  `groupes`.`id`=`j_eleves_groupes`.`id_groupe` AND `j_eleves_groupes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
-					$r_sql="SELECT DISTINCT DISTINCT '".$ensemble."' AS `ensemble`,`utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `groupes`,`j_eleves_groupes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND `groupes`.`id`='".$ids."' AND  `groupes`.`id`=`j_eleves_groupes`.`id_groupe` AND `j_eleves_groupes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
+					$r_sql="SELECT DISTINCT DISTINCT '".$ensemble."' AS `ensemble`,`utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`resp_pers`.`tel_port`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `groupes`,`j_eleves_groupes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND `groupes`.`id`='".$ids."' AND  `groupes`.`id`=`j_eleves_groupes`.`id_groupe` AND `j_eleves_groupes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
 					break;
 				case "aid" :
 					$r_sql="SELECT `aid`.`nom` FROM `aid` WHERE `aid`.`id`='".$ids."'";
@@ -182,7 +190,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						}
 					else $ensemble="";
 					//$r_sql="SELECT DISTINCT `aid`.`nom` AS `ensemble`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email` FROM `aid`,`j_aid_eleves`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `aid`.`id`='".$ids."' AND  `aid`.`id`=`j_aid_eleves`.`id_aid` AND `j_aid_eleves`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
-					$r_sql="SELECT DISTINCT `aid`.`nom` AS `ensemble`,`utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `aid`,`j_aid_eleves`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND `aid`.`id`='".$ids."' AND  `aid`.`id`=`j_aid_eleves`.`id_aid` AND `j_aid_eleves`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
+					$r_sql="SELECT DISTINCT `aid`.`nom` AS `ensemble`,`utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`resp_pers`.`tel_port`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `aid`,`j_aid_eleves`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND `aid`.`id`='".$ids."' AND  `aid`.`id`=`j_aid_eleves`.`id_aid` AND `j_aid_eleves`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login`";
 					break;
 				}
 			switch ($type)

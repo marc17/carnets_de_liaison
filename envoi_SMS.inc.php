@@ -7,18 +7,18 @@
 $tab_prestataires_SMS=array("pluriware.fr","tm4b.com","123-SMS.net");
 
 function filtrage_numero($numero,$international=false) {
-	// suuprime les caractËres indÈsirables et ajoute Èventuellement l'indicatif 33
+	// suuprime les caract√®res ind√©sirables et ajoute √©ventuellement l'indicatif 33
 	$numero=ereg_replace("[^0-9]","",$numero);
 	if ($international) $numero='33'.substr($numero, 1);
 }
 
 function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 	/*
-	$methode : GET ou par dÈfaut POST
+	$methode : GET ou par d√©faut POST
 	$url : truc.com
 	$script : machin.php
 	$t_parametres : array("param1" => "val1","param2" => "val2",...)
-	retour : chaÓne de caractËres contenant la rÈponse du serveu sans l'en-tÍte
+	retour : cha√Æne de caract√®res contenant la r√©ponse du serveu sans l'en-t√™te
 	*/
 
 	/*$parametres='';
@@ -33,9 +33,9 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 	    // avec cURL
 		$ch=curl_init();
 		if ($methode=="GET") {
-			if ($parametres!='') $script=$script."?".$parametres;  // MÈthode GET
-			curl_setopt($ch,CURLOPT_URL,$url.$script); // MÈthode GET
-			curl_setopt($ch,CURLOPT_HTTPGET,true); // MÈthode GET
+			if ($parametres!='') $script=$script."?".$parametres;  // M√©thode GET
+			curl_setopt($ch,CURLOPT_URL,$url.$script); // M√©thode GET
+			curl_setopt($ch,CURLOPT_HTTPGET,true); // M√©thode GET
 		} else {
 			curl_setopt($ch,CURLOPT_URL,$url.$script);
 			curl_setopt($ch,CURLOPT_POST,true);
@@ -52,7 +52,7 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 	
 		// sans cURL
 		if ($methode=="GET") {
-			$entete="GET ".$script."?".$parametres." HTTP/1.1\r\n";  // MÈthode GET
+			$entete="GET ".$script."?".$parametres." HTTP/1.1\r\n";  // M√©thode GET
 		} else {
 			$entete="POST ".$script." HTTP/1.1\r\n";
 		}
@@ -62,15 +62,15 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 		$entete.="Connection: Close\r\n\r\n";
 		$socket=@fsockopen($url,80,$errno,$errstr);
 		if($socket) {
-			fputs($socket,$entete); // envoi de l'en-tÍte
+			fputs($socket,$entete); // envoi de l'en-t√™te
 			if ($methode=="POST") fputs($socket,$parametres);
-			// on saute l'en-tÍte de la rÈponse HTTP
+			// on saute l'en-t√™te de la r√©ponse HTTP
 			$line="";
 			// on saute les lignes vides
 			while (!feof($socket) && $line=="") {
 				$line=trim(fgets($socket));
 			}
-			// on saute l'en-tÍte
+			// on saute l'en-t√™te
 			while (!feof($socket) && $line!="") {
 				$line=trim(fgets($socket));
 			}
@@ -78,7 +78,7 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 			while (!feof($socket) && $line=="") {
 				$line=trim(fgets($socket));
 			}
-			// ici $line contient la premiËre ligne aprËs l'en-tÍte de la rÈponse HTTP
+			// ici $line contient la premi√®re ligne apr√®s l'en-t√™te de la r√©ponse HTTP
 			$retour=$line;
 			while (!feof($socket)) {
 				$retour.=trim(fgets($socket));
@@ -91,9 +91,10 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 }
 
 
-function envoi_SMS($prestataire,$login,$password,$tab_to,$sms) {
-	// $tab_to : tableau des numÈros de tÈlÈphone auxquels envoyer le sms
-	// retourne "OK" si envoi rÈussi, un message d'erreur sinon
+function envoi_SMS($tab_to,$sms) {
+	// $tab_to : tableau des num√©ros de t√©l√©phone auxquels envoyer le sms
+	// retourne "OK" si envoi r√©ussi, un message d'erreur sinon
+	$prestataire=getSettingValue("carnets_de_liaison_prestataire_sms");
 	switch ($prestataire) {
 		case "pluriware.fr" :
 			$url="sms.pluriware.fr";
@@ -104,13 +105,13 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$sms) {
 			$parametres['pass']=getSettingValue("carnets_de_liaison_password_sms"); // mot de passe Pluriware
 			
 			foreach($tab_to as $key => $to) $tab_to[$key]=filtrage_numero($to,true);
-			$to=$tab_to[0]; // ! un seul numÈro
-			$parametres['to']=$to; // numÈro de tÈlÈphone auxquel on envoie le message (! un seul numÈro)
-			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // expÈditeur du message (facultatif)
+			$to=$tab_to[0]; // ! un seul num√©ro
+			$parametres['to']=$to; // num√©ro de t√©l√©phone auxquel on envoie le message (! un seul num√©ro)
+			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // exp√©diteur du message (facultatif)
 
 			$reponse=envoi_requete_http($url,$script,$parametres);
 			if (substr($reponse,0,3)=='ERR' || substr($reponse, 0, 6)=='Erreur') {
-				return 'SMS non enoyÈ(s) : '.$reponse;
+				return 'SMS non enoy√©(s) : '.$reponse;
 				} 
 			else return "OK";
 
@@ -123,15 +124,15 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$sms) {
 			$script="/http.php";
 			$parametres['email']=getSettingValue("carnets_de_liaison_login_sms"); // identifiant 123-SMS.net
 			$parametres['pass']=getSettingValue("carnets_de_liaison_password_sms"); // mot de passe 123-SMS.net
-			$parametres['message']=$sms; // message que l'on dÈsire envoyer
+			$parametres['message']=$sms; // message que l'on d√©sire envoyer
 			
 			foreach($tab_to as $key => $to) $tab_to[$key]=filtrage_numero($to);
 			$to=implode("-",$tab_to);
-			$parametres['numero']=$to; // numÈros de tÈlÈphones auxquels on envoie le message sÈparÈs par des tirets
-			$t_erreurs=array(80 => "Le message a ÈtÈ envoyÈ", 81 => "Le message est enregistrÈ pour un envoi en diffÈrÈ", 82 => "Le login et/ou mot de passe níest pas valide",  83 => "vous devez crÈditer le compte", 84 => "le numÈro de gsm níest pas valide", 85 => "le format díenvoi en diffÈrÈ níest pas valide", 86 => "le groupe de contacts est vide", 87 => "la valeur email est vide", 88 => "la valeur pass est vide",  89 => "la valeur numero est vide", 90 => "la valeur message est vide", 91 => "le message a dÈj‡ ÈtÈ envoyÈ ‡ ce numÈro dans les 24 derniËres heures");
+			$parametres['numero']=$to; // num√©ros de t√©l√©phones auxquels on envoie le message s√©par√©s par des tirets
+			$t_erreurs=array(80 => "Le message a √©t√© envoy√©", 81 => "Le message est enregistr√© pour un envoi en diff√©r√©", 82 => "Le login et/ou mot de passe n‚Äôest pas valide",  83 => "vous devez cr√©diter le compte", 84 => "le num√©ro de gsm n‚Äôest pas valide", 85 => "le format d‚Äôenvoi en diff√©r√© n‚Äôest pas valide", 86 => "le groupe de contacts est vide", 87 => "la valeur email est vide", 88 => "la valeur pass est vide",  89 => "la valeur numero est vide", 90 => "la valeur message est vide", 91 => "le message a d√©j√† √©t√© envoy√© √† ce num√©ro dans les 24 derni√®res heures");
 			$reponse=envoi_requete_http($url,$script,$parametres);
 			if ($reponse!='80') {
-				return 'SMS non enoyÈ(s) : '.$reponse.' '.$t_erreurs[$reponse];
+				return 'SMS non enoy√©(s) : '.$reponse.' '.$t_erreurs[$reponse];
 				} 
 			else return "OK";
 			
@@ -149,23 +150,23 @@ function envoi_SMS($prestataire,$login,$password,$tab_to,$sms) {
 			
 			foreach($tab_to as $key => $to) $tab_to[$key]=filtrage_numero($to,true);
 			$to=implode("%7C",$tab_to);
-			$parametres['to']=$to; // numÈros de tÈlÈphones auxquels on envoie le message sÈparÈs par des pipe %7C
+			$parametres['to']=$to; // num√©ros de t√©l√©phones auxquels on envoie le message s√©par√©s par des pipe %7C
 
-			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // expÈditeur du message (first class uniquement)
+			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // exp√©diteur du message (first class uniquement)
 			$parametres['route']='business'; // type de route (pour la france, business class uniquement)
 			$parametres['version']='2.1';
 			// $parametres['sim']='yes'; // on active le mode simulation, pour tester notre script
 			
 			$reponse=envoi_requete_http($url,$script,$parametres);
 			if (mb_substr($reponse, 0, 5)=='error' || substr($reponse, 0, 6)=='Erreur') {
-				return 'SMS non enoyÈ(s) : '.$reponse;
+				return 'SMS non enoy√©(s) : '.$reponse;
 				} 
 			else return "OK";
 
 			break;
 
 		default :
-			return "SMS non enoyÈ(s) : prestataire SMS non dÈfini.";
+			return "SMS non enoy√©(s) : prestataire SMS non d√©fini.";
 		}
 	
 	return $reponse;
@@ -190,7 +191,7 @@ $url="www.123-SMS.net";
 $script="/http.php";
 $parametres=array("email"=>"toto","message"=>"test");	
 $r=envoi_requete_http($url,$script,$parametres);
-$t_erreurs=array(80 => "Le message a ÈtÈ envoyÈ", 81 => "Le message est enregistrÈ pour un envoi en diffÈrÈ", 82 => "Le login et/ou mot de passe níest pas valide",  83 => "vous devez crÈditer le compte", 84 => "le numÈro de gsm níest pas valide", 85 => "le format díenvoi en diffÈrÈ níest pas valide", 86 => "le groupe de contacts est vide", 87 => "la valeur email est vide", 88 => "la valeur pass est vide",  89 => "la valeur numero est vide", 90 => "la valeur message est vide", 91 => "le message a dÈj‡ ÈtÈ envoyÈ ‡ ce numÈro dans les 24 derniËres heures");
+$t_erreurs=array(80 => "Le message a √©t√© envoy√©", 81 => "Le message est enregistr√© pour un envoi en diff√©r√©", 82 => "Le login et/ou mot de passe n‚Äôest pas valide",  83 => "vous devez cr√©diter le compte", 84 => "le num√©ro de gsm n‚Äôest pas valide", 85 => "le format d‚Äôenvoi en diff√©r√© n‚Äôest pas valide", 86 => "le groupe de contacts est vide", 87 => "la valeur email est vide", 88 => "la valeur pass est vide",  89 => "la valeur numero est vide", 90 => "la valeur message est vide", 91 => "le message a d√©j√† √©t√© envoy√© √† ce num√©ro dans les 24 derni√®res heures");
 echo $r." : ".$t_erreurs[$r];
 
 
