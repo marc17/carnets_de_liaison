@@ -18,7 +18,7 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 	$url : truc.com
 	$script : machin.php
 	$t_parametres : array("param1" => "val1","param2" => "val2",...)
-	retour : chaîne de caractères contenant la réponse du serveu sans l'en-tête
+	retour : chaîne de caractères contenant la réponse du serveur sans l'en-tête
 	*/
 
 	/*$parametres='';

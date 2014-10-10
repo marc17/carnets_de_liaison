@@ -139,7 +139,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 					if ($envoi_sms_notification=='oui' && $un_responsable['tel_port']!='') 
 						{
 						$retour_envoi_SMS=envoi_SMS(array($un_responsable['tel_port']),"Nouveau mot rédigé par ".$redacteur['civilite']." ".$redacteur['prenom']." ".$redacteur['nom']."dans le carnet de liaison de ".$un_responsable['nom_eleve']);
-						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"sms",'erreur'=>$un_responsable['login'].' '.$retour_envoi_SMS);
+						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>$un_responsable['login'].' '.$un_responsable['tel_port'].' '.$retour_envoi_SMS);
 						}
 					}
 				}
@@ -253,9 +253,11 @@ $t_bilan_envoi_notification=envoi_notification($liste_destinataires,$type_notifi
 // message éventuel d'erreurs
 $message_bilan_notification="";
 $nb_erreurs_mail=0;
-$deniere_erreur_mail="";
+$erreurs_mail="";
 $nb_erreurs_sql=0;
-$deniere_erreur_sql="";
+$erreurs_sql="";
+$nb_erreurs_sms=0;
+$erreurs_sms="";
 $autres_erreurs="";
 if (count($t_bilan_envoi_notification)>0)
 	{
@@ -265,11 +267,15 @@ if (count($t_bilan_envoi_notification)>0)
 			{
 			case "erreur_mail" :
 				$nb_erreurs_mail++;
-				$deniere_erreur_mail=$erreur['erreur'];
+				$erreurs_mail.=$erreur['erreur']."\n";
 				break;
 			case "erreur_sql" :
 				$nb_erreurs_sql++;
-				$deniere_erreur_sql=$erreur['erreur'];
+				$erreurs_sql.=$erreur['erreur']."\n";
+				break;
+			case "erreur_sms" :
+				$nb_erreurs_sms++;
+				$erreurs_sms.=$erreur['erreur']."\n";
 				break;
 			default :
 				$autres_erreurs.=$erreur['erreur']."\n";
@@ -279,13 +285,17 @@ if (count($t_bilan_envoi_notification)>0)
 	$message_bilan_notification.=$autres_erreurs;
 	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
 	if ($nb_erreurs_mail>0) 
-		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification\n (".$deniere_erreur_mail.")";
+		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification :\n (".$erreurs_mail.")";
+	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+	if ($nb_erreurs_sms>0) 
+		$message_bilan_notification.=$nb_erreurs_sms." erreur(s) d'envoi de SMS de notification :\n (".$erreurs_sms.")";
 	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
 	if ($nb_erreurs_sql>0) 
-		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL\n(".$deniere_erreur_sql.")";
+		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL :\n(".$erreurs_sql.")";
 	}
 if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-if ($envoi_mail_notification=="oui" && $nb_erreurs_mail==0) $message_bilan_notification.="Les notifications ont été envoyées par courriel.";
+if ($envoi_mail_notification=="oui" && $nb_erreurs_mail==0) $message_bilan_notification.="Toutes les notifications ont été envoyées par courriel.";
+if ($envoi_sms_notification=="oui" && $nb_erreurs_sms==0) $message_bilan_notification.="Toutes les notifications ont été envoyées par SMS.";
 
 // on retourne sur saisie.php
 $url="Location: saisie.php?";
