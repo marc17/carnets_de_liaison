@@ -236,7 +236,9 @@ if ($ids_mots_classe!="-1")
 	}
 
 	// Pour chaque élève de la classe
-	$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom`,`id_eleve`,`elenoet`,`periode` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe.") ORDER BY `j_eleves_classes`.`periode` DESC,`nom`,`prenom`";
+	$R_periode=mysqli_query($mysqli,"SELECT `num_periode` FROM `periodes` WHERE `id_classe` = '".$id_classe."' AND verouiller = 'N' ORDER BY `num_periode` LIMIT 1");
+	$num_periode=mysqli_fetch_assoc($R_periode)['num_periode'];
+	$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom`,`id_eleve`,`elenoet`,`periode` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe." AND `periode`='".$num_periode."') ORDER BY `nom`,`prenom`";
 	$R_eleves=mysqli_query($mysqli, $r_sql);
 	while($un_eleve=mysqli_fetch_assoc($R_eleves))
 		{

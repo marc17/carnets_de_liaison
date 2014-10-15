@@ -411,7 +411,9 @@ if ($etape==1)
 		<select name="ele_id" onChange="document.forms['saisie_1'].submit();" style="min-width: 100px; max-width: 260px;">
 			<option value="-1"></option>
 	<?php
-		$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom`,`periode` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe." AND NOT FIND_IN_SET(`ele_id`,'".$ele_ids."')) ORDER BY `periode` DESC,`nom`,`prenom`";
+		$R_periode=mysqli_query($mysqli,"SELECT `num_periode` FROM `periodes` WHERE `id_classe` = '".$id_classe."' AND verouiller = 'N' ORDER BY `num_periode` LIMIT 1");
+		$num_periode=mysqli_fetch_assoc($R_periode)['num_periode'];
+		$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe." AND `periode`='".$num_periode."' AND NOT FIND_IN_SET(`ele_id`,'".$ele_ids."')) ORDER BY `nom`,`prenom`";
 		echo $r_sql;
 		$R_eleves=mysqli_query($mysqli, $r_sql);
 		while($un_eleve=mysqli_fetch_assoc($R_eleves))
