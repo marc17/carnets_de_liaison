@@ -70,6 +70,20 @@ function elenoet_par_ele_id($ele_id)
 		else return 0;
 	}
 
+function derniere_periode_active($id_classe)
+	// renvoie l'indice de la première période non vérouillée si elle existe, de la dernière période sinon
+	{
+	global $mysqli;
+	$R_periode=mysqli_query($mysqli,"SELECT `num_periode`,`verouiller` FROM `periodes` WHERE `id_classe`='".$id_classe."' ORDER BY `num_periode`");
+	$retour=0; $p_courante=0;
+	while ($periode=mysqli_fetch_assoc($R_periode))
+		{
+		$p_courante=$periode['num_periode'];
+		if ($periode['verouiller']=='N' && $retour==0) $retour=$p_courante;
+		}
+	if ($retour==0) $retour=$p_courante;
+	return $retour;
+	}
 
 // si l'appel se fait avec passage de paramètre alors test du token
 if ((function_exists("check_token")) && ((count($_POST)<>0) || (count($_GET)<>0))) check_token();
@@ -116,6 +130,7 @@ $message_d_erreur="";
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : consultation";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 
@@ -197,9 +212,7 @@ Sélectionner un élève&nbsp;:&nbsp;
 	<select name="ele_id" onChange="document.forms['consultation_2'].submit();">
 		<option value="0">(aucun)</option>
 <?php
-	$R_periode=mysqli_query($mysqli,"SELECT `num_periode` FROM `periodes` WHERE `id_classe` = '".$id_classe."' AND verouiller = 'N' ORDER BY `num_periode` LIMIT 1");
-	$num_periode=mysqli_fetch_assoc($R_periode)['num_periode'];
-	$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom`,`id_eleve`,`periode` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe." AND `periode`='".$num_periode."') ORDER BY `nom`,`prenom`";
+	$r_sql="SELECT DISTINCT `ele_id`,`nom`,`prenom`,`id_eleve`,`periode` FROM `eleves`,`j_eleves_classes` WHERE (`eleves`.`login`=`j_eleves_classes`.`login` AND `j_eleves_classes`.`id_classe`=".$id_classe." AND `periode`='".derniere_periode_active($id_classe)."') ORDER BY `nom`,`prenom`";
 	$R_eleves=mysqli_query($mysqli, $r_sql);
 	while($un_eleve=mysqli_fetch_assoc($R_eleves))
 		{

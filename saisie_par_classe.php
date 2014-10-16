@@ -46,6 +46,7 @@ include("traitement_saisie_par_ensemble.php");
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : saisie";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 

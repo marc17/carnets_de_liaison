@@ -52,6 +52,7 @@ $message_d_erreur="";
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : administration";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 

@@ -125,6 +125,7 @@ $id_classe=$classe['id_classe'];
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : consultation";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 

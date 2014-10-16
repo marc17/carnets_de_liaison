@@ -699,6 +699,7 @@ if (isset($_POST['valider_suppression']))
 //**************** EN-TETE *****************
 $style_specifique="styles";
 $titre_page = "Carnets de liaison : administration";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 

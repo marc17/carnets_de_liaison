@@ -141,9 +141,9 @@ if (isset($_POST['cacher_mot']) OR isset($_POST['montrer_mot']))
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : saisie";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
-
 ?>
 
 <p class=bold><a href="../../accueil.php"><img src='../../images/icons/back.png' alt='Retour' class='back_link'/>Retour à l'accueil</a>

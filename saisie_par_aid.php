@@ -60,6 +60,7 @@ if (mysqli_num_rows($R_aid)==0) 	header("Location: saisie.php");
 //**************** EN-TETE *****************
 $style_specifique="mod_plugins/carnets_de_liaison/styles";
 $titre_page = "Carnets de liaison : saisie";
+unset($_SESSION['ariane']);
 require_once("../../lib/header.inc.php");
 //**************** FIN EN-TETE *************
 
