@@ -231,9 +231,9 @@ if (mysqli_num_rows($R_mots)>0)
 				}
 			}
 		?>
-		<div class="texte" style="<?php if (!$un_mot['visible']) echo " color: gray;"; ?>
+		<div class="texte" style="<?php if (!$un_mot['visible']) echo " color: gray;"; ?>">
 
-			<form method="post" action="saisie.php#<?php echo $un_mot['id_mot']; ?>">
+			<form method="POST" action="saisie.php#<?php echo $un_mot['id_mot']; ?>">
 			<p  class="intitule">
 			<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 		<?php
@@ -241,14 +241,14 @@ if (mysqli_num_rows($R_mots)>0)
 			{
 		?>
 			<input type="hidden" name="cacher_mot" value="<?php echo $un_mot['id_mot']; ?>">
-			<button style="float: left; margin-right: 5px; margin-left: 2px; border: none; background: none;" type="submit" title=" Occulter ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_OK.png"></button>
+			<button style="float: left; margin-top: 0px; margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Occulter ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_OK.png"></button>
 		<?php
 			}
 			else
 			{
 		?>
 			<input type="hidden" name="montrer_mot" value="<?php echo $un_mot['id_mot']; ?>">
-			<button style="float: left; margin-right: 5px; margin-left: 2px; border: none; background: none;" type="submit" title=" Montrer ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_not_OK.png"></button>
+			<button style="float: left; margin-top: 0px; margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Montrer ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_not_OK.png"></button>
 		<?php
 			}
 		?>
@@ -297,7 +297,7 @@ if (mysqli_num_rows($R_mots)>0)
 			if ($un_mot['ids_destinataires']!="-1")
 				{
 		?>
-				&nbsp;&nbsp;&nbsp;Classe(s) destinataire(s)&nbsp;:&nbsp;<?php echo liste_noms_de_classe($un_mot['ids_destinataires']); ?><br />
+				&nbsp;&nbsp;&nbsp;Classe(s)&nbsp;:&nbsp;<?php echo liste_noms_de_classe($un_mot['ids_destinataires']); ?><br />
 		<?php
 				}
 		?>
@@ -317,7 +317,7 @@ if (mysqli_num_rows($R_mots)>0)
 			if ($un_mot['ids_destinataires']!="-1")
 				{
 		?>
-				&nbsp;&nbsp;&nbsp;AID destinataire&nbsp;:&nbsp;<?php echo liste_noms_d_aid($un_mot['ids_destinataires']); ?><br />
+				&nbsp;&nbsp;&nbsp;AID&nbsp;:&nbsp;<?php echo liste_noms_d_aid($un_mot['ids_destinataires']); ?><br />
 		<?php
 				}
 		?>
@@ -336,7 +336,7 @@ if (mysqli_num_rows($R_mots)>0)
 			if ($un_mot['ids_destinataires']!="-1")
 				{
 		?>
-				&nbsp;&nbsp;&nbsp;Groupe destinataire&nbsp;:&nbsp;<?php echo liste_noms_de_groupe($un_mot['ids_destinataires']); ?><br />
+				&nbsp;&nbsp;&nbsp;Groupe&nbsp;:&nbsp;<?php echo liste_noms_de_groupe($un_mot['ids_destinataires']); ?><br />
 		<?php
 				}
 		?>
@@ -357,7 +357,7 @@ if (mysqli_num_rows($R_mots)>0)
 			if ($un_mot['ids_destinataires']!="-1")
 				{
 		?>
-				Élève(s) destinataire(s)&nbsp;:&nbsp;<br />
+				Élève(s)&nbsp;:&nbsp;<br />
 		<?php
 
 				foreach(t_liste_eleves($un_mot['ids_destinataires']) as $un_eleve)
@@ -376,7 +376,7 @@ if (mysqli_num_rows($R_mots)>0)
 			<form method="post" action="saisie_par_eleve.php" style="float: left; margin-left: 20px;">
 			<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 			<input type="hidden" name="ele_ids" value="<?php echo $un_mot['ids_destinataires']; ?>">
-			<button type="submit"> Nouveau mot avec cette liste d'élèves destinataires </button>
+			<button type="submit"> Nouveau mot avec cette liste d'élèves </button>
 			</form>
 		<?php
 			}

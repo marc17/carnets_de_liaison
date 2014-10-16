@@ -148,12 +148,6 @@ if ($message_d_erreur!="")
 <?php
 	}
 ?>
-
-<h2>Consultaton de carnets de liaison</h2>
-
-<h3 style="margin-left: 40px;">
-	<div style="width: 760px; height: 120px;">
-
 		<div id="calendriers" style="float: right; margin-left: 10px; background-color: #cccccc;">
 		<table>
 			<tr>
@@ -169,6 +163,11 @@ if ($message_d_erreur!="")
 			</tr>
 		</table>
 		</div>
+
+<h2>Consultation de carnets de liaison</h2>
+
+<h3 style="margin-left: 40px;">
+	<div style="width: 760px; height: 120px;">
 
 		<div style="width: 550px; padding-top:30px;">
 		<form method="post" name="consultation_1" action="consultation_cpe.php">

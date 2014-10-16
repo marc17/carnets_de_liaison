@@ -168,7 +168,7 @@ if ($message_d_erreur!="")
 	}
 ?>
 
-<h2>Consultaton d'un carnet de liaison</h2>
+<h2>Consultation d'un carnet de liaison</h2>
 
 <h3 style="margin-left: 40px;">
 <form method="post" name="consultation_1" action="consultation.php" style="float: left;">

@@ -32,7 +32,7 @@ include("verification_autorisations.inc.php");
 $carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_de_liaison_notification_sms_aux_responsables");
 
 // variables de configuration pour traitement_saisie_par_ensemble.php
-$message_erreur_saisie_destinataires="Vous devez sélectionner un groupe destinataire.<br />";
+$message_erreur_saisie_destinataires="Vous devez sélectionner un groupe.<br />";
 $table_carnet="`carnets_de_liaison_groupe`"; 
 $champ_id_table_carnet="`id_groupe`";
 $type_mot="groupe";
@@ -85,7 +85,7 @@ if ($message_d_erreur!="")
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 	<input type="hidden" name="id_modification" value="<?php echo $id_modification; ?>">
 	<input type="hidden" name="ids_destinataires_initial" value="<?php echo $ids_destinataires_initial; ?>">
-	<h4 style="margin-left:20px;">Groupe destinataire&nbsp;:
+	<h4 style="margin-left:20px;">Groupe&nbsp;:
 	<select name="ids_destinataires" style="min-width: 100px; max-width: 260px;">
 		<option value="-1"></option>
 	<?php

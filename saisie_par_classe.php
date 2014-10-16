@@ -32,7 +32,7 @@ include("verification_autorisations.inc.php");
 $carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_de_liaison_notification_sms_aux_responsables");
 
 // variables de configuration pour traitement_saisie_par_ensemble.php
-$message_erreur_saisie_destinataires="Vous devez sélectionner une ou plusieurs classes destinataires.<br />";
+$message_erreur_saisie_destinataires="Vous devez sélectionner une ou plusieurs classes.<br />";
 $table_carnet="`carnets_de_liaison_classe`"; 
 $champ_id_table_carnet="`id_classe`";
 $type_mot="classe";
@@ -70,7 +70,7 @@ if ($message_d_erreur!="")
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 	<input type="hidden" name="id_modification" value="<?php echo $id_modification; ?>">
 	<input type="hidden" name="ids_destinataires_initial" value="<?php echo $ids_destinataires_initial; ?>">
-	<h4 style="margin-left:20px;">Classes destinataires&nbsp;:<br /><br />
+	<h4 style="margin-left:20px;">Classes&nbsp;:<br /><br />
 	<div style="margin-left:0px;">
 	<?php
 	$r_sql="SELECT `id`,`classe`,`nom_complet` FROM `classes` ORDER BY `classe`";

@@ -408,9 +408,9 @@ if ($etape==1)
 		<input type="hidden" name="ele_ids" value="<?php echo $ele_ids; ?>">
 		<input type="hidden" name="etape" value="<?php echo $etape; ?>">
 		<h4 style="margin-left:20px;">
-		1. Sélectionner un ou plusieurs élèves destinataires<br /><br />
+		1. Sélectionner un ou plusieurs élèves<br /><br />
 		Classe&nbsp;:&nbsp;
-		<select name="id_classe" onChange="document.forms['saisie_1'].submit();" style="max-width: 100px;">
+		<select name="id_classe" onChange="document.forms['saisie_1'].submit();" style="max-width: 140px;">
 			<option value="0"></option>
 	<?php
 		$r_sql="SELECT *FROM `classes` ORDER BY `classe`";
@@ -439,11 +439,11 @@ if ($etape==1)
 	?>
 		</select>
 		<!--
-		&nbsp;<button name="ajout_eleve" value="ajout_eleve" type="submit"> Ajouter cet èlève à la liste des destinataires </button>
+		&nbsp;<button name="ajout_eleve" value="ajout_eleve" type="submit"> Ajouter cet èlève à la liste </button>
 		-->
 		</h4>
 		<h4 style="margin-left:160px;">
-		<button name="clore_ajout_eleve" value="clore" type="submit"> Terminer la sélection des destinataires </button>
+		<button name="clore_ajout_eleve" value="clore" type="submit"> Terminer la sélection </button>
 		 </h4>
 		</form>
 	</div>
@@ -585,12 +585,12 @@ if ($ele_ids!="-1")
 	<?php
 		}
 	?>
-	<h4 style="margin-left:20px; margin-bottom: 0px">Élève(s) destinataire(s)&nbsp;:&nbsp;</h4>
+	<h4 style="margin-left:20px; margin-bottom: 0px">Élève(s)&nbsp;:&nbsp;</h4>
 	<?php
 	if ($etape==1)
 		{
 	?>
-	<div style="margin-left:20px; margin-bottom: 20px">( <button title=" Retirer cet élève " style="border: none; background: none; vertical-align: middle;"><img style="width: 16px; height: 16px;" src="bouton_not_OK.png"></button> : retirer l'élève de la liste des destinataires)</div>
+	<div style="margin-left:20px; margin-bottom: 20px">( <button title=" Retirer cet élève " style="border: none; background: none; vertical-align: middle;"><img style="width: 16px; height: 16px;" src="bouton_not_OK.png"></button> : retirer l'élève de la liste)</div>
 	<?php
 		}
 	?>
