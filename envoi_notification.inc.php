@@ -105,8 +105,11 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 		}
 
 	// pour les notifications de mot adressé à un ensemble
-	// on concatène les destinataires dans le champ BCC
+	// on concatène les mails des destinataires dans le champ BCC
 	$bcc="";
+	// on concatène les numéros SMS des destinataires dans un tableau
+	$t_sms=array();
+	
 
 	switch ($type)
 		{
@@ -121,6 +124,12 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 					{
 					$envoi_mail_notification="non";
 					$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
+					}
+				//on envoie pas plus de $carnets_de_liaison_max_sms_notification couuriels de notification (sinon spam)
+				if (mysqli_num_rows($R_responsables)>$carnets_de_liaison_max_sms_notification) 
+					{
+					$envoi_sms_notification="non";
+					$t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>"Les notifications n'ont pas été envoyées par SMS,\n trop de destinataires.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_sms_notification);
 					}
 				while ($un_responsable=mysqli_fetch_assoc($R_responsables))
 					{
@@ -159,7 +168,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						}
 					else $ensemble="";
 					//$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
-					$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`resp_pers`.`tel_port`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs`, WHERE `utilisateurs`.`email`<>'' AND FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
+					$r_sql="SELECT DISTINCT `classes`.`nom_complet` AS 'nom_classe','".$ensemble."' AS `ensemble`, `utilisateurs`.`login`,`utilisateurs`.`prenom`,`utilisateurs`.`nom`,`utilisateurs`.`email`,`resp_pers`.`tel_port`,`eleves`.`id_eleve`,CONCAT_WS('',`eleves`.`prenom`,' ',`eleves`.`nom`) AS `nom_eleve` FROM `classes`,`j_eleves_classes`,`eleves`,`responsables2`,`resp_pers`,`utilisateurs` WHERE `utilisateurs`.`email`<>'' AND FIND_IN_SET(`classes`.`id`,'".$ids."') AND  `classes`.`id`=`j_eleves_classes`.`id_classe` AND `j_eleves_classes`.`login`=`eleves`.`login` AND `eleves`.`ele_id`=`responsables2`.`ele_id` AND `responsables2`.`resp_legal`<>0 AND `responsables2`.`pers_id`=`resp_pers`.`pers_id` AND `resp_pers`.`login`=`utilisateurs`.`login` ORDER BY `classes`.`nom_complet`,`utilisateurs`.`nom`,`utilisateurs`.`prenom`";
 					break;
 				case "groupe" :
 					$r_sql="SELECT GROUP_CONCAT(`classes`.`nom_complet`) AS `ensemble` FROM `classes`,`j_groupes_classes`,`groupes` WHERE `groupes`.`id`='".$ids."' AND `j_groupes_classes`.`id_groupe`=`groupes`.`id` AND `j_groupes_classes`.`id_classe`=`classes`.`id` GROUP BY `groupes`.`id`";
@@ -205,7 +214,6 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 					$subject="Carnet de liaison de ".$ensemble;
 					$texte="Nouveau mot rédigé par ".$redacteur['civilite']." ".$redacteur['prenom']." ".$redacteur['nom']."\ndans les carnets de liaison des élèves de ".$ensemble." :\n".stripslashes($_POST['intitule']);
 				}
-
 				$R_responsbles=mysqli_query($mysqli, $r_sql);
 				if ($R_responsbles && mysqli_num_rows($R_responsbles)>0)
 					{
@@ -214,20 +222,36 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						$envoi_mail_notification="non";
 						$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
 						}
-					while ($un_responsble=mysqli_fetch_assoc($R_responsbles)) 
+					/*
+					if (mysqli_num_rows($R_responsbles)>$carnets_de_liaison_max_sms_notification) 
+						{
+						$envoi_sms_notification="non";
+						$t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>"Les notifications n'ont pas été envoyées par SMS,\n trop de destinataires.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_smss_notification);
+						}
+					*/
+					while ($un_responsable=mysqli_fetch_assoc($R_responsbles)) 
 						{
 						// on affiche la notification sur le panneau d'affichage
-						message_notification($un_responsble['login'],$texte,$un_responsble['id_eleve']);
+						message_notification($un_responsable['login'],$texte,$un_responsable['id_eleve']);
 						// on ajoute un responsble au champ BCC
-						$bcc.=$un_responsble['email'].",";
+						$bcc.=$un_responsable['email'].",";
+						$t_sms[]=$un_responsable['tel_port'];
 						}
-					$texte.="\n\n".$carnets_de_liaison_url_gepi;
-					// on envoie éventuellement un mail de notification
+					// on envoie éventuellement les mails de notification
 					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
 						{
-						$retour=envoi_mail_notification($un_responsble['email'],$subject,"",$texte."\n",$redacteur['email']);
+						$retour=envoi_mail_notification($redacteur['email'],$subject,$bcc,$texte."\n\n".$carnets_de_liaison_url_gepi."\n",$redacteur['email']);
 						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
 						}
+					// on envoie éventuellement les sms de notification
+					/* todo : adapter envoi_SMS.inc.php à l'envoi de sms vers plusisurs destinataires (PluriWare entre autres)
+					if ($envoi_sms_notification=="oui")
+						{
+						$retour_envoi_SMS=envoi_SMS($t_sms,$texte;
+						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"erreur_sms",$retour_envoi_SMS);
+						$retour=envoi_sms_notification($un_responsable['esms'],$subject,"",$texte."\n",$redacteur['esms']);
+						}
+					*/
 					}
 				else
 					$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications ne peuvent être envoyées par courriel car aucun des responsables n'a d'adresse de courriel.");
