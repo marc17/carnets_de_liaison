@@ -82,12 +82,13 @@ function envoi_mail_notification($to,$subject,$bcc,$texte,$redacteur_email)
 
 function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notification)
 	{
-	global $mysqli,$gepiPath,$carnets_de_liaison_mail,$carnets_de_liaison_email_notification,$carnets_de_liaison_url_gepi,$carnets_de_liaison_max_mails_notification;
+	global $mysqli,$gepiPath,$carnets_de_liaison_mail,$carnets_de_liaison_email_notification,$carnets_de_liaison_url_gepi,$carnets_de_liaison_max_mails_notification,$carnets_de_liaison_max_sms_notification;
 	$r_sql="SELECT `civilite`,`prenom`,`nom`,`email` FROM `utilisateurs` WHERE `login`='".$_SESSION['login']."' LIMIT 1";
 
 	//$t_bilan_envoi_notification tableau de tableaux associatifs
 	// contenant la liste des erreurs qui se sont produites
 	//$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Un message d'erreur mail");
+	//$t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>"Un message d'erreur SMS);
 	//$t_bilan_envoi_notification[]=array('type'=>"erreur_sql",'erreur'=>"Un message d'erreur SQL");
 	//$t_bilan_envoi_notification[]=array('type'=>"autre_erreur",'erreur'=>"Un message d'erreur autre");
 	$t_bilan_envoi_notification=array();
@@ -142,7 +143,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
 						{
 						$retour=envoi_mail_notification($un_responsable['email'],$subject,"",$texte,$redacteur['email']);
-						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
+						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>$retour);
 						}
 					
 					if ($envoi_sms_notification=='oui' && $un_responsable['tel_port']!='') 
@@ -234,14 +235,15 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						// on affiche la notification sur le panneau d'affichage
 						message_notification($un_responsable['login'],$texte,$un_responsable['id_eleve']);
 						// on ajoute un responsble au champ BCC
-						$bcc.=$un_responsable['email'].",";
+						if ($bcc!="") $bcc.=",";
+						$bcc.=$un_responsable['email'];
 						$t_sms[]=$un_responsable['tel_port'];
 						}
 					// on envoie éventuellement les mails de notification
 					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
 						{
 						$retour=envoi_mail_notification($redacteur['email'],$subject,$bcc,$texte."\n\n".$carnets_de_liaison_url_gepi."\n",$redacteur['email']);
-						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"dernière erreur : ".$retour);
+						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>$retour);
 						}
 					// on envoie éventuellement les sms de notification
 					/* todo : adapter envoi_SMS.inc.php à l'envoi de sms vers plusisurs destinataires (PluriWare entre autres)
@@ -291,34 +293,46 @@ if (count($t_bilan_envoi_notification)>0)
 			{
 			case "erreur_mail" :
 				$nb_erreurs_mail++;
-				$erreurs_mail.=$erreur['erreur']."\n";
+				if ($erreurs_mail!="") $erreurs_mail.="\n";
+				$erreurs_mail.=$erreur['erreur'];
 				break;
 			case "erreur_sql" :
 				$nb_erreurs_sql++;
-				$erreurs_sql.=$erreur['erreur']."\n";
+				if ($erreurs_sql!="") $erreurs_sql.="\n";
+				$erreurs_sql.=$erreur['erreur'];
 				break;
 			case "erreur_sms" :
 				$nb_erreurs_sms++;
-				$erreurs_sms.=$erreur['erreur']."\n";
+				if ($erreurs_sms!="") $erreurs_sms.="\n";
+				$erreurs_sms.=$erreur['erreur'];
 				break;
 			default :
-				$autres_erreurs.=$erreur['erreur']."\n";
+				if ($autres_erreurs!="") $autres_erreurs.="\n";
+				$autres_erreurs.=$erreur['erreur'];
 				break;
 			}
 		}
 	$message_bilan_notification.=$autres_erreurs;
-	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-	if ($nb_erreurs_mail>0) 
-		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification :\n (".$erreurs_mail.")";
-	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+	
+	if ($nb_erreurs_mail>0)
+		{
+		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification :\n".$erreurs_mail;
+		}
 	if ($nb_erreurs_sms>0) 
-		$message_bilan_notification.=$nb_erreurs_sms." erreur(s) d'envoi de SMS de notification :\n (".$erreurs_sms.")";
-	if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+		{
+		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+		$message_bilan_notification.=$nb_erreurs_sms." erreur(s) d'envoi de SMS de notification :\n".$erreurs_sms;
+		}
 	if ($nb_erreurs_sql>0) 
-		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL :\n(".$erreurs_sql.")";
+		{
+		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
+		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL :\n".$erreurs_sql;
+		}
 	}
 if ($message_bilan_notification!="") $message_bilan_notification.="\n";
 if ($envoi_mail_notification=="oui" && $nb_erreurs_mail==0) $message_bilan_notification.="Toutes les notifications ont été envoyées par courriel.";
+if ($message_bilan_notification!="") $message_bilan_notification.="\n";
 if ($envoi_sms_notification=="oui" && $nb_erreurs_sms==0) $message_bilan_notification.="Toutes les notifications ont été envoyées par SMS.";
 
 // on retourne sur saisie.php

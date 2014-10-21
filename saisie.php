@@ -241,14 +241,14 @@ if (mysqli_num_rows($R_mots)>0)
 			{
 		?>
 			<input type="hidden" name="cacher_mot" value="<?php echo $un_mot['id_mot']; ?>">
-			<button style="float: left; margin-top: 0px; margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Occulter ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_OK.png"></button>
+			<button style="margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Occulter ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_OK.png"></button>
 		<?php
 			}
 			else
 			{
 		?>
 			<input type="hidden" name="montrer_mot" value="<?php echo $un_mot['id_mot']; ?>">
-			<button style="float: left; margin-top: 0px; margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Montrer ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_not_OK.png"></button>
+			<button style="margin-right: 5px; margin-left: 5px; border: none; background: none;" type="submit" title=" Montrer ce mot "><img style="width:16px; height:16px; vertical-align: bottom;" src="bouton_not_OK.png"></button>
 		<?php
 			}
 		?>
