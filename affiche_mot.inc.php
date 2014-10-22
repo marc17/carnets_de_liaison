@@ -1,4 +1,9 @@
 <?php
+
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 ?>
 			<a name="ancre_retour<?php echo $un_mot['id_mot']; ?>"></a>
 			<div style="max-width: 550px;">

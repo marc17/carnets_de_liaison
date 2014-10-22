@@ -1,5 +1,10 @@
 <?php
 
+//************************
+// Copyleft Marc Leygnac
+//************************
+
+
 function slashe_n2nl($ch)
 	{
 	$remplace=array("\\n"=>"\n","\\r"=>"");

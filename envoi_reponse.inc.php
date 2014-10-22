@@ -1,5 +1,9 @@
 <?php
 
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 // URL GEPI
 $carnets_de_liaison_url_gepi=getSettingValue("carnets_de_liaison_url_gepi");
 

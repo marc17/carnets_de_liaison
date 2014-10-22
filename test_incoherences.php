@@ -1,4 +1,9 @@
 <?php
+
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 $niveau_arbo = "2";
 // Initialisations files (Attention au chemin des fichiers en fonction de l'arborescence)
 //include("../../lib/initialisationsPropel.inc.php");

@@ -1,4 +1,9 @@
 <?php
+
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 // affiche un carnet de liaison
 
 $nom_complet_classe="";

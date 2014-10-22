@@ -263,7 +263,7 @@ if (mysqli_num_rows($R_mots)>0)
 		if ($un_mot['reponse_destinataire']=="oui")
 			{
 		?>
-		Les responsables peuvent répondre à ce mot.<br />
+		Les destinataires peuvent répondre à ce mot.<br />
 		<?php
 			}
 		if ($carnets_de_liaison_mail=="oui" && $un_mot['mail']!="" && $un_mot['reponse_destinataire']=="oui")

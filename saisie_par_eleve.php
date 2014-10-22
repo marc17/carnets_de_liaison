@@ -498,7 +498,7 @@ if ($etape==2)
 	if ($carnets_de_liaison_notification_mail_aux_responsables=="oui")
 			{
 ?>
-			<br />Courriel de notification aux responsables : 
+			<br />Courriel de notification aux destinataires : 
 				OUI <input <?php if (isset($_POST['envoi_mail_notification']) && ($_POST['envoi_mail_notification']=="oui")) echo "checked=\"checked\"" ?>name="envoi_mail_notification" value="oui" type="radio">
 				NON <input <?php if ((!isset($_POST['envoi_mail_notification'])) || (isset($_POST['envoi_mail_notification']) && ($_POST['envoi_mail_notification']=="non"))) echo "checked=\"checked\"" ?> name="envoi_mail_notification" value="non" type="radio">
 			<br />
@@ -518,7 +518,7 @@ if ($etape==2)
 	if ($carnets_de_liaison_notification_sms_aux_responsables=="oui")
 		{
 ?>
-		<br />SMS de notification aux responsables : 
+		<br />SMS de notification aux destinataires : 
 			OUI <input <?php if (isset($_POST['envoi_sms_notification']) && ($_POST['envoi_sms_notification']=="oui")) echo "checked=\"checked\"" ?>name="envoi_sms_notification" value="oui" type="radio">
 			NON <input <?php if ((!isset($_POST['envoi_sms_notification'])) || (isset($_POST['envoi_sms_notification']) && ($_POST['envoi_sms_notification']=="non"))) echo "checked=\"checked\"" ?> name="envoi_sms_notification" value="non" type="radio">
 		<br />

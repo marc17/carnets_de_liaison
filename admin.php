@@ -1,4 +1,9 @@
 <?php
+
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 $niveau_arbo = "2";
 // Initialisations files (Attention au chemin des fichiers en fonction de l'arborescence)
 //include("../../lib/initialisationsPropel.inc.php");
@@ -369,7 +374,7 @@ if(!isset($gepiSettings['carnets_de_liaison_notification_sms_aux_responsables'])
 	if (!saveSetting('carnets_de_liaison_password_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_password_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_password_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_identite_sms','06')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_identite_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_identite_sms',getSettingValue('gepiSchoolName'))) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_identite_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_identite_sms' a été ajoutée à la table `setting`.<br />";
 
 	if (!saveSetting('carnets_de_liaison_max_sms_notification',60)) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_sms_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
@@ -739,6 +744,8 @@ if ($message_bilan!="")
 ?>
 
 <h2>Administration du plugin 'carnets_de_liaison'</h2>
+<br />
+
 <div id="conteneur" style="margin: auto; width: 800px;">
 
 <?php
@@ -754,14 +761,10 @@ if ($message_maj_tables!="")
 <h3 style="margin-left: 20px;">
 
 Documentation du plugin : <a href="documentation.pdf" target="_blank"><button>Consulter la documentation</button></a>
-<br /><br />
 
-<form action="test_incoherences.php">
-<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-Cohérence des données&nbsp;:&nbsp;<button type="submit" value="ok"> Lancer la vérification </button>
-</form>
+<hr />
 
-<br />
+
 <form action="admin.php#mail" name="mail" method="post"><a name="mail"></a>
 <?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 Activer l'envoi de courriels&nbsp;:&nbsp;
@@ -800,7 +803,7 @@ if(getSettingValue('carnets_de_liaison_mail')=="oui")
 	<input name="activer_notification_mail" value="oui" type="checkbox" <?php if ($carnets_de_liaison_notification_mail_aux_responsables=="oui") echo "checked=\"checked\""; ?> >
 	&nbsp;<button type="submit" value="ok" name="valider_notification_mail">Valider</button>
 	<?php $mess=($carnets_de_liaison_notification_mail_aux_responsables=="oui")?"est":"n'est pas"; ?>
-	<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de courriels de notification aux responsables <?php echo $mess; ?> autorisé)</p>
+	<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de courriels de notification aux destinataires <?php echo $mess; ?> autorisé)</p>
 	</form>
 	<br />
 	<?php
@@ -809,10 +812,10 @@ if(getSettingValue('carnets_de_liaison_mail')=="oui")
 	?>
 		<form action="admin.php#max_mails_notifications" name="max_mails_notification" method="post"><a name="max_mails_notifications"></a>
 		<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-		Nombre maximun de courriels de notifications pouvant être envoyés &nbsp;:&nbsp;
+		Nombre maximun de courriels de notification pouvant être envoyés &nbsp;:&nbsp;
 		<input name="carnets_de_liaison_max_mails_notification" value="<?php echo $carnets_de_liaison_max_mails_notification; ?>" type="text" size="4">
 		&nbsp;<button type="submit" value="ok" name="valider_max_mails_notification">Valider</button>
-		<p style="margin-left: 20px; font-style:italic;">Si le nombre de courriels de notifications à envoyer est supérieur à ce nombre maximum l'envoi est alors annulé pour éviter d'être assimilé à du SPAM.</p>
+		<p style="margin-left: 20px; font-style:italic;">Si le nombre de courriels de notification à envoyer est supérieur à ce nombre maximum l'envoi est alors annulé pour éviter d'être assimilé à du SPAM.</p>
 		</form>
 		<br />
 	<?php
@@ -821,13 +824,16 @@ if(getSettingValue('carnets_de_liaison_mail')=="oui")
 <?php
 	}
 ?>
+
+<hr />
+
 <form action="admin.php#envoi_sms" name="envoi_sms" method="post"><a name="envoi_sms"></a>
 <?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 Autoriser l'envoi de SMS notifiant la rédaction d'un mot&nbsp;:&nbsp;
 <input name="activer_notification_sms" value="oui" type="checkbox" <?php if ($carnets_de_liaison_notification_sms_aux_responsables=="oui") echo "checked=\"checked\""; ?> >
 &nbsp;<button type="submit" value="ok" name="valider_notification_sms">Valider</button>
 <?php $mess=($carnets_de_liaison_notification_sms_aux_responsables=="oui")?"est":"n'est pas"; ?>
-<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de SMS de notification aux responsables <?php echo $mess; ?> autorisé)</p>
+<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de SMS de notification aux destinataires <?php echo $mess; ?> autorisé)</p>
 </form>
 <?php
 if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="oui")
@@ -838,7 +844,7 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	<form action="admin.php#numero_sms" name="numero_sms" method="post"><a name="numero_sms"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 	Identié de l'émetteur SMS&nbsp;:&nbsp;
-	<input type="text" style="width: 300px" name="envoi_numero_sms_notification" value="<?php echo $carnets_de_liaison_identite_sms; ?>">
+	<input type="text" style="width: 300px" name="envoi_numero_sms_notification" value="<?php echo ($carnets_de_liaison_identite_sms=='')?getSettingValue('gepiSchoolName'):$carnets_de_liaison_identite_sms; ?>">
 	&nbsp;<button type="submit" value="ok" name="valider_numero_sms_notification">Valider</button>
 	<p style="margin-left: 20px; font-style:italic;">Nom  de l'établissement, ou numéro de téléphone, ou autre (éviter les lettres accentuées et caractères spéciaux).</p>
 	</form>
@@ -881,7 +887,7 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	<br />
 	<form action="admin.php#max_sms_notifications" name="max_sms_notification" method="post"><a name="max_sms_notifications"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Nombre maximun de SMS de notifications pouvant être envoyés &nbsp;:&nbsp;
+	Nombre maximun de SMS de notification pouvant être envoyés &nbsp;:&nbsp;
 	<input name="max_sms_notification" value="<?php echo $carnets_de_liaison_max_sms_notification; ?>" type="text" size="4">
 	&nbsp;<button type="submit" value="ok" name="valider_max_sms_notification">Valider</button>
 	<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notification à envoyer est supérieur à ce nombre l'envoi est alors annulé.</p>
@@ -889,7 +895,9 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 <?php
 	}
 ?>
-<br />
+
+<hr />
+
 <form action="admin.php#documents" name="documents" method="post"><a name="documents"></a>
 <?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 Autoriser les rédacteurs à joindre un fichier aux mots&nbsp;:&nbsp;
@@ -1033,6 +1041,15 @@ if(getSettingAOui('active_module_trombino_pers'))
 	}
 ?>
 
+<hr />
+
+<form action="test_incoherences.php">
+<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
+Cohérence des données&nbsp;:&nbsp;<button type="submit" value="ok"> Lancer la vérification </button>
+<p style="margin-left: 20px; font-style:italic;">(pour que la consultation de carnets soit rapide les données sont redondantes, et donc un incident, très improbable, peut éventuellement corrompre la cohérence entre les tables)</p>
+</form>
+<br />
+
 <form action="admin.php#sauvegarde" name="sauvegarde" method="post"><a name="sauvegarde"></a>
 <?php if (function_exists("add_token_field")) echo add_token_field(); ?>
 Sauvegarde des documents joints aux mots&nbsp;:&nbsp;
@@ -1058,7 +1075,8 @@ Suppression des carnets&nbsp;:&nbsp;
 <button type="submit" value="ok" name="valider_suppression">Supprimer</button>
 <p style="margin-left: 20px; font-style:italic;"><b>Attention !</b> cela supprimera définitivement tous les carnets (mots et documents joints),<br />à utiliser uniquement pour initialiser les données pour une nouvelle année scolaire.</p>
 </form>
-<br />
+
+<hr />
 </h3>
 </div>
 <?php

@@ -92,7 +92,8 @@ function envoi_requete_http($url,$script,$t_parametres,$methode="POST") {
 
 
 function envoi_SMS($tab_to,$sms) {
-	// $tab_to : tableau des numéros de téléphone auxquels envoyer le sms
+	// $tab_to : tableau des numéros de téléphone auxquels envoyer le SMS
+	// $sms : le texte du SMS
 	// retourne "OK" si envoi réussi, un message d'erreur sinon
 	$prestataire=getSettingValue("carnets_de_liaison_prestataire_sms");
 	switch ($prestataire) {

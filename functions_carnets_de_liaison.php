@@ -1,5 +1,9 @@
 <?php
 
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 // l'utilisateur a-t-il accès au script $chemin_script ?
 function calcul_autorisation_carnets_de_liaison($login,$chemin_script)
 	{

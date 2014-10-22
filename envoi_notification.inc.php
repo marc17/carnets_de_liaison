@@ -1,5 +1,9 @@
 <?php
 
+//************************
+// Copyleft Marc Leygnac
+//************************
+
 // fonctions d'envoi SMS
 include("envoi_SMS.inc.php");
 
@@ -124,13 +128,13 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 				if (mysqli_num_rows($R_responsables)>$carnets_de_liaison_max_mails_notification) 
 					{
 					$envoi_mail_notification="non";
-					$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
+					$t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>"Les notifications n'ont pas été envoyées par courriel,\n trop de destinataires donc risque d'assimilation à du SPAM. Le nombre de destinataires est limité à ".$carnets_de_liaison_max_mails_notification);
 					}
 				//on envoie pas plus de $carnets_de_liaison_max_sms_notification couuriels de notification (sinon spam)
 				if (mysqli_num_rows($R_responsables)>$carnets_de_liaison_max_sms_notification) 
 					{
 					$envoi_sms_notification="non";
-					$t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>"Les notifications n'ont pas été envoyées par SMS,\n trop de destinataires.\nLe nombre de destinataires est limité à ".$carnets_de_liaison_max_sms_notification);
+					$t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>"Les notifications n'ont pas été envoyées par SMS,\n trop de destinataires. Le nombre de destinataires est limité à ".$carnets_de_liaison_max_sms_notification);
 					}
 				while ($un_responsable=mysqli_fetch_assoc($R_responsables))
 					{
@@ -317,17 +321,17 @@ if (count($t_bilan_envoi_notification)>0)
 	if ($nb_erreurs_mail>0)
 		{
 		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification :\n".$erreurs_mail;
+		$message_bilan_notification.=$nb_erreurs_mail." erreur(s) d'envoi de courriel de notification :\n".$erreurs_mail."\n";
 		}
 	if ($nb_erreurs_sms>0) 
 		{
 		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-		$message_bilan_notification.=$nb_erreurs_sms." erreur(s) d'envoi de SMS de notification :\n".$erreurs_sms;
+		$message_bilan_notification.=$nb_erreurs_sms." erreur(s) d'envoi de SMS de notification :\n".$erreurs_sms."\n";
 		}
 	if ($nb_erreurs_sql>0) 
 		{
 		if ($message_bilan_notification!="") $message_bilan_notification.="\n";
-		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL :\n".$erreurs_sql;
+		$message_bilan_notification.=$nb_erreurs_sql." erreur(s) MySQL :\n".$erreurs_sql."\n";
 		}
 	}
 if ($message_bilan_notification!="") $message_bilan_notification.="\n";
