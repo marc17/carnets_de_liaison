@@ -871,10 +871,10 @@ if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="ou
 	<br />
 	<form action="admin.php#identifiant_sms" name="identifiant_sms" method="post"><a name="identifiant_sms"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Login SMS&nbsp;:&nbsp;
+	Identifiant SMS&nbsp;:&nbsp;
 	<input type="text" style="width: 300px" name="envoi_identifiant_sms" value="<?php echo $carnets_de_liaison_login_sms; ?>">
 	&nbsp;<button type="submit" value="ok" name="valider_identifiant_sms">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Login pour se connecter au prestataire SMS.</p>
+	<p style="margin-left: 20px; font-style:italic;">Identifiant pour se connecter au prestataire SMS.</p>
 	</form>
 	<br />
 	<form action="admin.php#password_sms" name="password_sms" method="post"><a name="password_sms"></a>

@@ -151,7 +151,7 @@ function envoi_SMS($tab_to,$sms) {
 			
 			foreach($tab_to as $key => $to) $tab_to[$key]=filtrage_numero($to,true);
 			$to=implode("%7C",$tab_to);
-			$parametres['to']=$to; // numéros de téléphones auxquels on envoie le message séparés par des pipe %7C
+			$parametres['to']=$to; // numéros de téléphones auxquels on envoie le message séparés par des 'pipe' %7C
 
 			$parametres['from']=getSettingValue("carnets_de_liaison_identite_sms"); // expéditeur du message (first class uniquement)
 			$parametres['route']='business'; // type de route (pour la france, business class uniquement)
