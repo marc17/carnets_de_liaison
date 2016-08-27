@@ -381,6 +381,17 @@ if(!isset($gepiSettings['carnets_de_liaison_notification_sms_aux_responsables'])
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_max_sms_notification' a été ajoutée à la table `setting`.<br />";
 	}
 
+// mettre à jour les tables pour passer de la version 1.8.0 à la version 1.8.1
+if(isset($gepiSettings['carnets_de_liaison_prestataire_sms']))
+	{
+	$tab_transfert_noms_prestataires=array('pluriware.fr' => 'PLURIWARE','tm4b.com' => 'TM4B','123-SMS.net' => '123-SMS');
+	$OK=saveSetting('sms_prestataire',$tab_transfert_noms_prestataires[getSettingValue('carnets_de_liaison_prestataire_sms')]) && saveSetting('sms_username',getSettingValue('carnets_de_liaison_login_sms')) && saveSetting('sms_password',getSettingValue('carnets_de_liaison_password_sms')) && saveSetting('sms_identite',getSettingValue('carnets_de_liaison_identite_sms'));
+	// on supprime les entrées devenues inutiles
+	$OK=deleteSetting('carnets_de_liaison_prestataire_sms') && deleteSetting('carnets_de_liaison_login_sms') && deleteSetting('carnets_de_liaison_password_sms') && deleteSetting('carnets_de_liaison_identite_sms');
+	if (!$OK) $message_maj_tables="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS n'ont pas été correctement enregistrées.<br />";
+		else $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS ont été correctement enregistrées.<br />";
+	}
+
 // l'utilisateur est-il autorisé à exécuter ce script ?
 include("verification_autorisations.inc.php");
 
@@ -490,34 +501,6 @@ if (isset($_POST['valider_notification_sms']))
 		else
 		$carnets_de_liaison_notification_sms_aux_responsables="non";
 	if (!saveSetting('carnets_de_liaison_notification_sms_aux_responsables',$carnets_de_liaison_notification_sms_aux_responsables)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
-	}
-
-// modification de la valeur  identité émetteur SMS  Carnets de liaison
-if (isset($_POST['valider_numero_sms_notification']))
-	{
-	$carnets_de_liaison_identite_sms=$_POST['envoi_numero_sms_notification'];
-	if (!saveSetting('carnets_de_liaison_identite_sms',$carnets_de_liaison_identite_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
-	}
-
-// modification de la valeur de "carnets_de_liaison_prestataire_sms"
-if (isset($_POST['valider_prestataire_sms']))
-	{
-	$carnets_de_liaison_prestataire_sms=$_POST['envoi_prestataire_sms'];
-	if (!saveSetting('carnets_de_liaison_prestataire_sms',$carnets_de_liaison_prestataire_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
-	}
-
-// modification de la valeur de "carnets_de_liaison_login_sms"
-if (isset($_POST['valider_identifiant_sms']))
-	{
-	$carnets_de_liaison_login_sms=$_POST['envoi_identifiant_sms'];
-	if (!saveSetting('carnets_de_liaison_login_sms',$carnets_de_liaison_login_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
-	}
-
-// modification de la valeur de "carnets_de_liaison_password_sms"
-if (isset($_POST['valider_password_sms']))
-	{
-	$carnets_de_liaison_password_sms=$_POST['envoi_password_sms'];
-	if (!saveSetting('carnets_de_liaison_password_sms',$carnets_de_liaison_password_sms)) $message_d_erreur.="Erreur MySQL : <br />".mysqli_error($mysqli)."<br />";
 	}
 
 // modification de la valeur de "carnets_de_liaison_max_sms_notification"
@@ -825,77 +808,38 @@ if(getSettingValue('carnets_de_liaison_mail')=="oui")
 	}
 ?>
 
-<hr />
 
-<form action="admin.php#envoi_sms" name="envoi_sms" method="post"><a name="envoi_sms"></a>
-<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-Autoriser l'envoi de SMS notifiant la rédaction d'un mot&nbsp;:&nbsp;
-<input name="activer_notification_sms" value="oui" type="checkbox" <?php if ($carnets_de_liaison_notification_sms_aux_responsables=="oui") echo "checked=\"checked\""; ?> >
-&nbsp;<button type="submit" value="ok" name="valider_notification_sms">Valider</button>
-<?php $mess=($carnets_de_liaison_notification_sms_aux_responsables=="oui")?"est":"n'est pas"; ?>
-<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de SMS de notification aux destinataires <?php echo $mess; ?> autorisé)</p>
-</form>
 <?php
-if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="oui")
+if (getSettingAOui('autorise_envoi_sms'))
 	{
-	include("envoi_SMS.inc.php");
 ?>
-	<br />
-	<form action="admin.php#numero_sms" name="numero_sms" method="post"><a name="numero_sms"></a>
+<hr />
+	<form action="admin.php#envoi_sms" name="envoi_sms" method="post"><a name="envoi_sms"></a>
 	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Identié de l'émetteur SMS&nbsp;:&nbsp;
-	<input type="text" style="width: 300px" name="envoi_numero_sms_notification" value="<?php echo ($carnets_de_liaison_identite_sms=='')?getSettingValue('gepiSchoolName'):$carnets_de_liaison_identite_sms; ?>">
-	&nbsp;<button type="submit" value="ok" name="valider_numero_sms_notification">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Nom  de l'établissement, ou numéro de téléphone, ou autre (éviter les lettres accentuées et caractères spéciaux).</p>
+	Autoriser l'envoi de SMS notifiant la rédaction d'un mot&nbsp;:&nbsp;
+	<input name="activer_notification_sms" value="oui" type="checkbox" <?php if ($carnets_de_liaison_notification_sms_aux_responsables=="oui") echo "checked=\"checked\""; ?> >
+	&nbsp;<button type="submit" value="ok" name="valider_notification_sms">Valider</button>
+	<?php $mess=($carnets_de_liaison_notification_sms_aux_responsables=="oui")?"est":"n'est pas"; ?>
+	<p style="margin-left: 20px; font-style:italic;">(état courant : l'envoi de SMS de notification aux destinataires <?php echo $mess; ?> autorisé)</p>
 	</form>
-	<br />
-	<form action="admin.php#prestataire_sms" name="prestataire_sms" method="post"><a name="prestataire_sms"></a>
-	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Prestataire SMS&nbsp;:&nbsp;	
-	<select style="width: 200px;" name="envoi_prestataire_sms">
-		<optgroup>
-		<option></option>
 	<?php
-	foreach($tab_prestataires_SMS as $prestataire)
+	if (getSettingValue('carnets_de_liaison_notification_sms_aux_responsables')=="oui")
 		{
+		include("../../lib/envoi_SMS.inc.php");
 	?>
-		<option value="<?php echo $prestataire;?>" <?php if ($carnets_de_liaison_prestataire_sms==$prestataire) echo " selected='selected'"?>><?php echo $prestataire; ?></option>
-		<?php
-		}
-	?>
-		</optgroup>
-	</select>
-	&nbsp;<button type="submit" value="ok" name="valider_prestataire_sms">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Prestataire SMS.</p>
-	</form>
-	<br />
-	<form action="admin.php#identifiant_sms" name="identifiant_sms" method="post"><a name="identifiant_sms"></a>
-	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Identifiant SMS&nbsp;:&nbsp;
-	<input type="text" style="width: 300px" name="envoi_identifiant_sms" value="<?php echo $carnets_de_liaison_login_sms; ?>">
-	&nbsp;<button type="submit" value="ok" name="valider_identifiant_sms">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Identifiant pour se connecter au prestataire SMS.</p>
-	</form>
-	<br />
-	<form action="admin.php#password_sms" name="password_sms" method="post"><a name="password_sms"></a>
-	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Mot de passe SMS&nbsp;:&nbsp;
-	<input type="password" style="width: 300px" name="envoi_password_sms" value="<?php echo $carnets_de_liaison_password_sms; ?>">
-	&nbsp;<button type="submit" value="ok" name="valider_password_sms">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Mot de passe pour se connecter au prestataire SMS.</p>
-	</form>
-	<br />
-	<form action="admin.php#max_sms_notifications" name="max_sms_notification" method="post"><a name="max_sms_notifications"></a>
-	<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
-	Nombre maximun de SMS de notification pouvant être envoyés &nbsp;:&nbsp;
-	<input name="max_sms_notification" value="<?php echo $carnets_de_liaison_max_sms_notification; ?>" type="text" size="4">
-	&nbsp;<button type="submit" value="ok" name="valider_max_sms_notification">Valider</button>
-	<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notification à envoyer est supérieur à ce nombre l'envoi est alors annulé.</p>
-	</form>
+		<form action="admin.php#max_sms_notifications" name="max_sms_notification" method="post"><a name="max_sms_notifications"></a>
+		<?php if (function_exists("add_token_field")) echo add_token_field(); ?>
+		Nombre maximun de SMS de notification pouvant être envoyés &nbsp;:&nbsp;
+		<input name="max_sms_notification" value="<?php echo $carnets_de_liaison_max_sms_notification; ?>" type="text" size="4">
+		&nbsp;<button type="submit" value="ok" name="valider_max_sms_notification">Valider</button>
+		<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notification à envoyer est supérieur à ce nombre l'envoi est alors annulé.</p>
+		</form>
 <?php
+		}
 	}
 ?>
 
+	
 <hr />
 
 <form action="admin.php#documents" name="documents" method="post"><a name="documents"></a>

@@ -5,7 +5,7 @@
 //************************
 
 // fonctions d'envoi SMS
-include("envoi_SMS.inc.php");
+include("../../lib/envoi_SMS.inc.php");
 
 // Max de mails de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_mails_notification=(getSettingValue("carnets_de_liaison_max_mails_notification")==NULL)?0:intval(getSettingValue("carnets_de_liaison_max_mails_notification"));
@@ -150,7 +150,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						if ($retour!="") $t_bilan_envoi_notification[]=array('type'=>"erreur_mail",'erreur'=>$retour);
 						}
 					
-					if ($envoi_sms_notification=='oui' && $un_responsable['tel_port']!='') 
+					if (getSettingAOui('autorise_envoi_sms') && $envoi_sms_notification=='oui' && $un_responsable['tel_port']!='') 
 						{
 						$retour_envoi_SMS=envoi_SMS(array($un_responsable['tel_port']),"Nouveau mot rédigé par ".$redacteur['civilite']." ".$redacteur['prenom']." ".$redacteur['nom']."dans le carnet de liaison de ".$un_responsable['nom_eleve']);
 						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"erreur_sms",'erreur'=>$un_responsable['login'].' '.$un_responsable['tel_port'].' '.$retour_envoi_SMS);
@@ -241,7 +241,7 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						// on ajoute un responsble au champ BCC
 						if ($bcc!="") $bcc.=",";
 						$bcc.=$un_responsable['email'];
-						$t_sms[]=$un_responsable['tel_port'];
+						if ($un_responsable['tel_port']!='') $t_sms[]=$un_responsable['tel_port'];
 						}
 					// on envoie éventuellement les mails de notification
 					if ($envoi_mail_notification=="oui" && $carnets_de_liaison_mail=="oui")
@@ -251,11 +251,10 @@ function envoi_notification($ids,$type,$envoi_mail_notification,$envoi_sms_notif
 						}
 					// on envoie éventuellement les sms de notification
 					/* todo : adapter envoi_SMS.inc.php à l'envoi de sms vers plusisurs destinataires (PluriWare entre autres)
-					if ($envoi_sms_notification=="oui")
+					if (getSettingAOui('autorise_envoi_sms') && $envoi_sms_notification=="oui")
 						{
 						$retour_envoi_SMS=envoi_SMS($t_sms,$texte;
 						if ($retour_envoi_SMS!='OK') $t_bilan_envoi_notification[]=array('type'=>"erreur_sms",$retour_envoi_SMS);
-						$retour=envoi_sms_notification($un_responsable['esms'],$subject,"",$texte."\n",$redacteur['esms']);
 						}
 					*/
 					}

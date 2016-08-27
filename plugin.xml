@@ -7,8 +7,8 @@
 	<licence>GNU/GPL</licence>
 	<auteurCourriel> </auteurCourriel>
 	<auteurSite> </auteurSite>
-	<version>1.8.0</version>
-	<versiongepi>1.6.5</versiongepi>
+	<version>1.8.1</version>
+	<versiongepi>1.6.9</versiongepi>
 	<description>Carnets de liaison</description>
 	<installation>
 		<requetes>
@@ -122,22 +122,6 @@
 			</requete>
 			<requete>
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_prestataire_sms', '')
-			</requete>
-			<requete>
-			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_login_sms', '')
-			</requete>
-			<requete>
-			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_password_sms', '')
-			</requete>
-			<requete>
-			INSERT INTO `setting` (`NAME` ,`VALUE`)
-			VALUES ('carnets_de_liaison_identite_sms', '06')
-			</requete>
-			<requete>
-			INSERT INTO `setting` (`NAME` ,`VALUE`)
 			VALUES ('carnets_de_liaison_max_sms_notification', '60')
 			</requete>
 		</requetes>
@@ -190,22 +174,6 @@
 			<requete>
 			DELETE FROM `setting`
 			WHERE `NAME`='carnets_de_liaison_notification_sms_aux_responsables'
-			</requete>
-			<requete>
-			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_prestataire_sms'
-			</requete>
-			<requete>
-			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_login_sms'
-			</requete>
-			<requete>
-			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_password_sms'
-			</requete>
-			<requete>
-			DELETE FROM `setting`
-			WHERE `NAME`='carnets_de_liaison_identite_sms'
 			</requete>
 			<requete>
 			DELETE FROM `setting`
