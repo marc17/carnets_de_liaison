@@ -384,10 +384,24 @@ if(!isset($gepiSettings['carnets_de_liaison_notification_sms_aux_responsables'])
 // mettre à jour les tables pour passer de la version 1.8.0 à la version 1.8.1
 if(isset($gepiSettings['carnets_de_liaison_prestataire_sms']))
 	{
+	$OK=TRUE;
 	$tab_transfert_noms_prestataires=array('pluriware.fr' => 'PLURIWARE','tm4b.com' => 'TM4B','123-SMS.net' => '123-SMS');
-	$OK=saveSetting('sms_prestataire',$tab_transfert_noms_prestataires[getSettingValue('carnets_de_liaison_prestataire_sms')]) && saveSetting('sms_username',getSettingValue('carnets_de_liaison_login_sms')) && saveSetting('sms_password',getSettingValue('carnets_de_liaison_password_sms')) && saveSetting('sms_identite',getSettingValue('carnets_de_liaison_identite_sms'));
+	switch (getSettingValue('carnets_de_liaison_prestataire_sms')) {
+		case 'pluriware.fr' :
+			$OK=saveSetting('sms_prestataire','PLURIWARE');
+			break;
+		case 'tm4b.com' :
+			$OK=saveSetting('sms_prestataire','TM4B');
+			break;
+		case '123-SMS.net' :
+			$OK=saveSetting('sms_prestataire','123-SMS');
+			break;
+		default :
+			$OK=saveSetting('sms_prestataire','');
+	}
+	$OK=$OK && saveSetting('sms_username',getSettingValue('carnets_de_liaison_login_sms')) && saveSetting('sms_password',getSettingValue('carnets_de_liaison_password_sms')) && saveSetting('sms_identite',getSettingValue('carnets_de_liaison_identite_sms'));
 	// on supprime les entrées devenues inutiles
-	$OK=deleteSetting('carnets_de_liaison_prestataire_sms') && deleteSetting('carnets_de_liaison_login_sms') && deleteSetting('carnets_de_liaison_password_sms') && deleteSetting('carnets_de_liaison_identite_sms');
+	deleteSetting('carnets_de_liaison_prestataire_sms'); deleteSetting('carnets_de_liaison_login_sms'); deleteSetting('carnets_de_liaison_password_sms'); deleteSetting('carnets_de_liaison_identite_sms');
 	if (!$OK) $message_maj_tables="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS n'ont pas été correctement enregistrées.<br />";
 		else $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS ont été correctement enregistrées.<br />";
 	}
@@ -412,18 +426,6 @@ $carnets_de_liaison_max_mails_notification=intval(getSettingValue("carnets_de_li
 
 // les rédacteurs peuvent-ils envoyer un sms de notification ?
 $carnets_de_liaison_notification_sms_aux_responsables=getSettingValue("carnets_de_liaison_notification_sms_aux_responsables");
-
-// prestataire SMS
-$carnets_de_liaison_prestataire_sms=getSettingValue("carnets_de_liaison_prestataire_sms");
-
-// login SMS
-$carnets_de_liaison_login_sms=getSettingValue("carnets_de_liaison_login_sms");
-
-// password SMS
-$carnets_de_liaison_password_sms=getSettingValue("carnets_de_liaison_password_sms");
-
-// identité émetteur SMS  Carnets de liaison
-$carnets_de_liaison_identite_sms=getSettingValue("carnets_de_liaison_identite_sms");
 
 // max de sms de notification qu'il est possible d'envoyer
 $carnets_de_liaison_max_sms_notification=intval(getSettingValue("carnets_de_liaison_max_sms_notification"));
@@ -834,6 +836,7 @@ if (getSettingAOui('autorise_envoi_sms'))
 		&nbsp;<button type="submit" value="ok" name="valider_max_sms_notification">Valider</button>
 		<p style="margin-left: 20px; font-style:italic;">Si le nombre de SMS de notification à envoyer est supérieur à ce nombre l'envoi est alors annulé.</p>
 		</form>
+		<br /><p style="font-style:italic;">Vérifier les identifiants de connexion au prestataire dans <a href="../../gestion/param_gen.php#config_envoi_sms">Paramètres/Configuration générale</a></p>
 <?php
 		}
 	}
