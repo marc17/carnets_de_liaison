@@ -204,14 +204,14 @@ $message_maj_tables="";
 if (!existe_table("carnets_de_liaison_reponses"))
 	{
 	$r_sql="ALTER TABLE `carnets_de_liaison_mots` ADD `reponse_destinataire` VARCHAR( 3 ) NOT NULL DEFAULT 'non' AFTER `type`";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible d'ajouter le champ `reponse_destinataire` à la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible d'ajouter le champ `reponse_destinataire` à la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="Le champ `reponse_destinataire` a été ajouté à la table `carnets_de_liaison_mots`.<br />";
 	$r_sql="UPDATE `carnets_de_liaison_mots` SET `reponse_destinataire`='oui' WHERE `mail`<>''";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible d'initialiser le champ `reponse_destinataire` de la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible d'initialiser le champ `reponse_destinataire` de la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="Le champ `reponse_destinataire` de la table `carnets_de_liaison_mots` a été initialisé.<br />";
-	if (!saveSetting('carnets_de_liaison_saisie_responsable', 'oui')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_saisie_responsable' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_saisie_responsable', 'oui')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_saisie_responsable' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_saisie_responsable' a été ajoutée à la table `setting`.<br />";
-	if (!saveSetting('carnets_de_liaison_reponses_responsables', 'oui')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_reponses_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_reponses_responsables', 'oui')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_reponses_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_reponses_responsables' a été ajoutée à la table `setting`.<br />";
 	$r_sql="CREATE TABLE `carnets_de_liaison_reponses` (
 		`id_mot` INT(11) NOT NULL DEFAULT '0',
@@ -220,7 +220,7 @@ if (!existe_table("carnets_de_liaison_reponses"))
 		`texte` TEXT NOT NULL DEFAULT '',
 		INDEX (`id_mot`)
 		)";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de créer la table `carnets_de_liaison_reponses` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de créer la table `carnets_de_liaison_reponses` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La table `carnets_de_liaison_reponses` a été créée.<br />";
 	}
 
@@ -228,39 +228,39 @@ if (!existe_table("carnets_de_liaison_reponses"))
 if (!existe_table("carnets_de_liaison_aid"))
 	{
 	$r_sql="ALTER TABLE `carnets_de_liaison_mots` ADD `ensemble_destinataire` VARCHAR( 256 ) NOT NULL DEFAULT '' AFTER `ids_destinataires`";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible d'ajouter le champ `ensemble_destinataire` à la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible d'ajouter le champ `ensemble_destinataire` à la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="Le champ `ensemble_destinataire` a été ajouté à la table `carnets_de_liaison_mots`.<br />";
 	$r_sql="CREATE TABLE `carnets_de_liaison_aid` (
 			  `id_aid` smallint(6) NOT NULL,
 			  `ids_mots` varchar(512) NOT NULL DEFAULT '-1',
 			  UNIQUE KEY `id_aid` (`id_aid`)
 			)";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de créer la table `carnets_de_liaison_aid` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de créer la table `carnets_de_liaison_aid` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La table `carnets_de_liaison_aid` a été créée.<br />";
 	$r_sql="CREATE TABLE `carnets_de_liaison_groupe` (
 			  `id_groupe` smallint(6) NOT NULL,
 			  `ids_mots` varchar(512) NOT NULL DEFAULT '-1',
 			  UNIQUE KEY `id_groupe` (`id_groupe`)
 			)";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de créer la table `carnets_de_liaison_groupe` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de créer la table `carnets_de_liaison_groupe` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La table `carnets_de_liaison_groupe` a été créée.<br />";
 	$r_sql="UPDATE `carnets_de_liaison_classe` SET `ids_mots`=CONCAT(SUBSTRING(`ids_mots`,1,LENGTH(`ids_mots`)-1),'-1')";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_classe` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_classe` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La fin de liste '0' a été remplacée par '-1' dans la table `carnets_de_liaison_classe`.<br />";
 	$r_sql="UPDATE `carnets_de_liaison_eleve` SET `ids_mots`=CONCAT(SUBSTRING(`ids_mots`,1,LENGTH(`ids_mots`)-1),'-1')";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_eleve` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_eleve` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La fin de liste '0' a été remplacée par '-1' dans la table `carnets_de_liaison_eleve`.<br />";
 	$r_sql="UPDATE `carnets_de_liaison_mots` SET `ids_destinataires`=CONCAT(SUBSTRING(`ids_destinataires`,1,LENGTH(`ids_destinataires`)-1),'-1')";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de remplacer la fin de liste '0' par '-1' dans la table `carnets_de_liaison_mots` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La fin de liste '0' a été remplacée par '-1' dans la table `carnets_de_liaison_mots`.<br />";
 	}
 
 // mettre à jour les tables pour passer de la version 1.4 à la version 1.5
 if(!isset($gepiSettings['carnets_de_liaison_affiche_trombines_eleves']))
 	{
-	if (!saveSetting('carnets_de_liaison_affiche_trombines_eleves', 'oui')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_affiche_trombines_eleves' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_affiche_trombines_eleves', 'oui')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_affiche_trombines_eleves' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_affiche_trombines_eleves' a été ajoutée à la table `setting`.<br />";
-	if (!saveSetting('carnets_de_liaison_affiche_trombines_profs', 'non')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_affiche_trombines_profs' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_affiche_trombines_profs', 'non')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_affiche_trombines_profs' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_affiche_trombines_profs' a été ajoutée à la table `setting`.<br />";
 	}
 
@@ -273,7 +273,7 @@ if (!existe_table("carnets_de_liaison_droits"))
 	`login` varchar(50) NOT NULL,
 	`nom` varchar(100) NOT NULL,
 	PRIMARY KEY (`id_carnets_de_liaison_droits`) )";
-	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables="Impossible de créer la table `carnets_de_liaison_droits` : ".mysqli_error($mysqli)."<br />";
+	if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de créer la table `carnets_de_liaison_droits` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="La table `carnets_de_liaison_droits` a été créée.<br />";
 
 	// mise à jour des menus
@@ -304,24 +304,24 @@ if (!existe_table("carnets_de_liaison_droits"))
 	
 	if(!isset($gepiSettings['carnets_de_liaison_notification_mail_aux_responsables']))
 		{
-		if (!saveSetting('carnets_de_liaison_notification_mail_aux_responsables', 'non')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_au_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		if (!saveSetting('carnets_de_liaison_notification_mail_aux_responsables', 'non')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_au_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 			else $message_maj_tables.="L'entrée 'carnets_de_liaison_notification_mail_aux_responsables' a été ajoutée à la table `setting`.<br />";
 		}
 	if(!isset($gepiSettings['carnets_de_liaison_email_notification']))
 		{
-		if (!saveSetting('carnets_de_liaison_email_notification', "nobody@".$_SERVER['SERVER_NAME'])) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_email_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		if (!saveSetting('carnets_de_liaison_email_notification', "nobody@".$_SERVER['SERVER_NAME'])) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_email_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 			else $message_maj_tables.="L'entrée 'carnets_de_liaison_email_notification' a été ajoutée à la table `setting`.<br />";
 		}
 	if(!isset($gepiSettings['carnets_de_liaison_url_gepi']))
 		{
-		if (!saveSetting('carnets_de_liaison_url_gepi', '')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_url_gepi' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		if (!saveSetting('carnets_de_liaison_url_gepi', '')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_url_gepi' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 			else $message_maj_tables.="L'entrée 'carnets_de_liaison_url_gepi' a été ajoutée à la table `setting`.<br />";
 		}
 
 // mettre à jour les tables pour passer de la version 1.6 à la version 1.6.1
 	if(!isset($gepiSettings['carnets_de_liaison_max_mails_notification']))
 		{
-		if (!saveSetting('carnets_de_liaison_max_mails_notification',60)) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_mails_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		if (!saveSetting('carnets_de_liaison_max_mails_notification',60)) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_mails_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 			else $message_maj_tables.="L'entrée 'carnets_de_liaison_max_mails_notification' a été ajoutée à la table `setting`.<br />";
 		}
 
@@ -344,7 +344,7 @@ if (!existe_table("carnets_de_liaison_droits"))
 				('', ".$id_plugin.", 'mod_plugins/carnets_de_liaison/index_eleve.php', 'eleve', 'V')";
 			if (!mysqli_query($mysqli, $r_sql)) $message_maj_tables.="Impossible de mettre à jour la table 'plugins_autorisations' ".mysqli_error($mysqli)."<br />";
 				else $message_maj_tables.="La table 'plugins_autorisations' a été mise à jour.<br />";
-			if (!saveSetting('carnets_de_liaison_consultation_eleve', 'non')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_consultation_eleve' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+			if (!saveSetting('carnets_de_liaison_consultation_eleve', 'non')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_consultation_eleve' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 				else $message_maj_tables.="L'entrée 'carnets_de_liaison_consultation_eleve' a été ajoutée à la table `setting`.<br />";
 			}
 		}
@@ -354,28 +354,28 @@ if (!existe_table("carnets_de_liaison_droits"))
 if(!isset($gepiSettings['carnets_de_liaison_notification_sms_aux_responsables']))
 	{
 	// remplacer dans la table Settings "carnets_de_liaison_notification_aux_responsables" par "carnets_de_liaison_notification_mail_aux_responsables"
-	if (!saveSetting('carnets_de_liaison_notification_mail_aux_responsables',getSettingValue("carnets_de_liaison_notification_aux_responsables"))) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_mail_aux_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_notification_mail_aux_responsables',getSettingValue("carnets_de_liaison_notification_aux_responsables"))) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_mail_aux_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_notification_mail_aux_responsables' a été ajoutée à la table `setting`.<br />";
-	if (!deleteSetting("carnets_de_liaison_notification_aux_responsables")) $message_maj_tables="Impossible de supprimer l'entrée 'carnets_de_liaison_notification_aux_responsables' de la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!deleteSetting("carnets_de_liaison_notification_aux_responsables")) $message_maj_tables.="Impossible de supprimer l'entrée 'carnets_de_liaison_notification_aux_responsables' de la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_notification_aux_responsables' a été supprimée de la table `setting`.<br />";
 
 	// nouvelles entrées dans la table Settings
-	if (!saveSetting('carnets_de_liaison_notification_sms_aux_responsables','non')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_sms_aux_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_notification_sms_aux_responsables','non')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_notification_sms_aux_responsables' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_notification_sms_aux_responsables' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_prestataire_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_prestataire_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_prestataire_sms','')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_prestataire_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_prestataire_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_login_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_login_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_login_sms','')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_login_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_login_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_password_sms','')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_password_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_password_sms','')) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_password_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_password_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_identite_sms',getSettingValue('gepiSchoolName'))) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_identite_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_identite_sms',getSettingValue('gepiSchoolName'))) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_identite_sms' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_identite_sms' a été ajoutée à la table `setting`.<br />";
 
-	if (!saveSetting('carnets_de_liaison_max_sms_notification',60)) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_sms_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	if (!saveSetting('carnets_de_liaison_max_sms_notification',60)) $message_maj_tables.="Impossible d'ajouter l'entrée 'carnets_de_liaison_max_sms_notification' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 		else $message_maj_tables.="L'entrée 'carnets_de_liaison_max_sms_notification' a été ajoutée à la table `setting`.<br />";
 	}
 
@@ -400,7 +400,7 @@ if(isset($gepiSettings['carnets_de_liaison_prestataire_sms']))
 	$OK=$OK && saveSetting('sms_username',getSettingValue('carnets_de_liaison_login_sms')) && saveSetting('sms_password',getSettingValue('carnets_de_liaison_password_sms')) && saveSetting('sms_identite',getSettingValue('carnets_de_liaison_identite_sms'));
 	// on supprime les entrées devenues inutiles
 	deleteSetting('carnets_de_liaison_prestataire_sms'); deleteSetting('carnets_de_liaison_login_sms'); deleteSetting('carnets_de_liaison_password_sms'); deleteSetting('carnets_de_liaison_identite_sms');
-	if (!$OK) $message_maj_tables="Version 1.8.0 vers version 1.8.1 : les données prestataires SMS n'ont pas été correctement enregistrées.<br />";
+	if (!$OK) $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestataires SMS n'ont pas été correctement enregistrées.<br />";
 		else $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestataires SMS ont été correctement enregistrées.<br />";
 	}
 
