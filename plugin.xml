@@ -124,6 +124,10 @@
 			INSERT INTO `setting` (`NAME` ,`VALUE`)
 			VALUES ('carnets_de_liaison_max_sms_notification', '60')
 			</requete>
+			<requete>
+			INSERT INTO `setting` (`NAME` ,`VALUE`)
+			VALUES ('carnets_de_liaison_url_gepi', '')
+			</requete>
 		</requetes>
 	</installation>
 	<desinstallation>
@@ -178,6 +182,10 @@
 			<requete>
 			DELETE FROM `setting`
 			WHERE `NAME`='carnets_de_liaison_max_sms_notification'
+			</requete>
+			<requete>
+			DELETE FROM `setting`
+			WHERE `NAME`='carnets_de_liaison_url_gepi'
 			</requete>
 		</requetes>
 	</desinstallation>

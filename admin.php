@@ -314,9 +314,7 @@ if (!existe_table("carnets_de_liaison_droits"))
 		}
 	if(!isset($gepiSettings['carnets_de_liaison_url_gepi']))
 		{
-		$t_url=parse_url($_SERVER['HTTP_REFERER']);
-		$url=$t_url['scheme']."://".$t_url['host'].$gepiPath;
-		if (!saveSetting('carnets_de_liaison_url_gepi',$url)) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_url_gepi' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+		if (!saveSetting('carnets_de_liaison_url_gepi', '')) $message_maj_tables="Impossible d'ajouter l'entrée 'carnets_de_liaison_url_gepi' à la table `setting` : ".mysqli_error($mysqli)."<br />";
 			else $message_maj_tables.="L'entrée 'carnets_de_liaison_url_gepi' a été ajoutée à la table `setting`.<br />";
 		}
 
@@ -402,9 +400,13 @@ if(isset($gepiSettings['carnets_de_liaison_prestataire_sms']))
 	$OK=$OK && saveSetting('sms_username',getSettingValue('carnets_de_liaison_login_sms')) && saveSetting('sms_password',getSettingValue('carnets_de_liaison_password_sms')) && saveSetting('sms_identite',getSettingValue('carnets_de_liaison_identite_sms'));
 	// on supprime les entrées devenues inutiles
 	deleteSetting('carnets_de_liaison_prestataire_sms'); deleteSetting('carnets_de_liaison_login_sms'); deleteSetting('carnets_de_liaison_password_sms'); deleteSetting('carnets_de_liaison_identite_sms');
-	if (!$OK) $message_maj_tables="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS n'ont pas été correctement enregistrées.<br />";
-		else $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestattaires SMS ont été correctement enregistrées.<br />";
+	if (!$OK) $message_maj_tables="Version 1.8.0 vers version 1.8.1 : les données prestataires SMS n'ont pas été correctement enregistrées.<br />";
+		else $message_maj_tables.="Version 1.8.0 vers version 1.8.1 : les données prestataires SMS ont été correctement enregistrées.<br />";
 	}
+
+// a priori pas d'erreur
+$message_d_erreur="";
+$message_bilan="";
 
 // l'utilisateur est-il autorisé à exécuter ce script ?
 include("verification_autorisations.inc.php");
@@ -417,6 +419,12 @@ $carnets_de_liaison_email_notification=getSettingValue("carnets_de_liaison_email
 
 // URL GEPI
 $carnets_de_liaison_url_gepi=getSettingValue("carnets_de_liaison_url_gepi");
+if ($carnets_de_liaison_url_gepi=='')
+	{
+	$t_url=parse_url($_SERVER['HTTP_REFERER']);
+	$url=$t_url['scheme']."://".$t_url['host'].$gepiPath;
+	if (!saveSetting('carnets_de_liaison_url_gepi',$url)) $message_d_erreur.="Impossible de modifier l'entrée 'carnets_de_liaison_url_gepi' à la table `setting` : ".mysqli_error($mysqli)."<br />";
+	}
 
 // les rédacteurs peuvent-ils envoyer un mail de notification ?
 $carnets_de_liaison_notification_mail_aux_responsables=getSettingValue("carnets_de_liaison_notification_mail_aux_responsables");
@@ -447,11 +455,6 @@ $carnets_de_liaison_affiche_trombines_eleves=getSettingValue("carnets_de_liaison
 
 // les photos des profs sont-elles affichées ?
 $carnets_de_liaison_affiche_trombines_profs=getSettingValue("carnets_de_liaison_affiche_trombines_profs");
-
-
-// a priori pas d'erreur
-$message_d_erreur="";
-$message_bilan="";
 
 // modification de la valeur de "carnets_de_liaison_mail"
 if (isset($_POST['valider_mail']))
