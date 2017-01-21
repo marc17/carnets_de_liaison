@@ -287,14 +287,14 @@ if (isset($_POST['saisie_ok']))
 				{
 				$message="<!-- carnets de liaison -->";
 				$message.="<span style=\"font-weight:bold\">Carnets de liaison : </span>";
-				$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"mod_plugins/carnets_de_liaison/consultation.php#ancre_retour".$id_mot."\">";
+				$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"".$gepiPath."/mod_plugins/carnets_de_liaison/consultation.php#ancre_retour".$id_mot."\">";
 				if (function_exists("add_token_field")) $message.=add_token_field(false,false);
 				$message.="<input type=\"hidden\" name=\"id_classe\" value=\"".$id_classe."\">";
 				$message.="<input type=\"hidden\" name=\"ele_id\" value=\"".$ele_id."\">";
 				$message.="mot intitulé \"".stripslashes($_POST['intitule'])."\" de ".$civilite_utilisateur." ".$_SESSION['prenom']." ".$_SESSION['nom']."  rédigé le ".date_du_jour();
 				if (isset($_POST['identite_eleve'])) 
 						$message.=" dans le carnet de ".$_POST['identite_eleve'];
-				$message.=".&nbsp;<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button></form>";
+				$message.=".&nbsp;<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"".$gepiPath."/mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button></form>";
 				message_accueil_utilisateur($_POST['login_destinataire'],$message,time(),time()+3600*24*7,0,true);
 				}
 

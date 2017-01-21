@@ -79,16 +79,16 @@ if (isset($_POST['envoyer_reponse']) && ($_POST['texte']!=""))
 				break;
 			case "responsable" :
 				$action="index.php";
-				$bouton="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
+				$bouton="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"".$gepiPath."/mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
 				break;
 			default :
 				$action="consultation_reponses.php";
-				$bouton="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
+				$bouton="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"".$gepiPath."/mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
 			}
 
 		$message="<!-- carnets de liaison -->";
 		$message.="<span style=\"font-weight:bold\">Carnets de liaison : </span>";
-		$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"mod_plugins/carnets_de_liaison/".$action."#ancre_retour".$_POST['id_mot']."\">";
+		$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"".$gepiPath."/mod_plugins/carnets_de_liaison/".$action."#ancre_retour".$_POST['id_mot']."\">";
 		if (function_exists("add_token_field")) $message.=add_token_field(false,false);
 		$message.="<input type=\"hidden\" name=\"id_classe\" value=\"".$_POST['id_classe']."\">";
 		$message.="<input type=\"hidden\" name=\"id_eleve\" value=\"".$_POST['id_eleve']."\">";

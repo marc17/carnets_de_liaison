@@ -51,13 +51,13 @@ function message_d_erreur_mail($errno, $errstr)
 
 function message_notification($login,$texte,$id_eleve)
 	{
-	global $id_mot;
+	global $id_mot,$gepiPath;
 	if (function_exists("message_accueil_utilisateur"))
 		{
-		$bouton_voir="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
+		$bouton_voir="<button type=\"submit\" title=\" Voir ce mot \" style=\"border: none; background: none; float: right;\"><img style=\"width:16px; height:16px; vertical-align: bottom;\" src=\"".$gepiPath."/mod_plugins/carnets_de_liaison/bouton_voir_carnet.png\"></button>";
 		$message="<!-- carnets de liaison -->";
 		$message.="<span style=\"font-weight:bold\">Carnets de liaison : </span><br />";
-		$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"mod_plugins/carnets_de_liaison/index.php#ancre_retour".$id_mot."\">";
+		$message.="<form method=\"post\" name=\"consultation_carnet\" action=\"".$gepiPath."/mod_plugins/carnets_de_liaison/index.php#ancre_retour".$id_mot."\">";
 		if (function_exists("add_token_field")) $message.=add_token_field(false,false);
 		$message.="<input type=\"hidden\" name=\"id_eleve\" value=\"".$id_eleve."\">";
 		$message.=$texte;
