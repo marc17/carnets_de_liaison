@@ -10,6 +10,10 @@
 	<version>1.8.1</version>
 	<versiongepi>1.6.9</versiongepi>
 	<description>Carnets de liaison</description>
+	<description_detaillee>L'objet de ce plugin est de permettre aux responsables de consulter en ligne les "carnets de liaison" (ou "de correspondance") des élèves dont ils ont la charge. 
+	Un carnet est une liste de "mots" constitués par un intitulé, un texte, et éventuellement une pièce jointe. 
+	Un carnet est accessible en lecture et écriture par les responsables de l'élève et par tout le personnel de l'établissement.
+	Seuls les élèves ayant un compte Gepi peuvent accéder en lecture à leur carnet.</description_detaillee>
 	<installation>
 		<requetes>
 			<requete>
