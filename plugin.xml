@@ -7,8 +7,8 @@
 	<licence>GNU/GPL</licence>
 	<auteurCourriel> </auteurCourriel>
 	<auteurSite> </auteurSite>
-	<version>1.8.1</version>
-	<versiongepi>1.6.9</versiongepi>
+	<version>1.8.2</version>
+	<versiongepi>1.7.4</versiongepi>
 	<description>Carnets de liaison</description>
 	<description_detaillee>L'objet de ce plugin est de permettre aux responsables de consulter en ligne les "carnets de liaison" (ou "de correspondance") des élèves dont ils ont la charge. 
 	Un carnet est une liste de "mots" constitués par un intitulé, un texte, et éventuellement une pièce jointe. 
